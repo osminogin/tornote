@@ -1,0 +1,11 @@
+{{ define "title" }}Anonymous Self-destructing Notes{{ end }}
+
+{{ define "content" }}
+  <div class="form-group">
+    <label for="note_text">This note permanently deleted after reading.</label>
+	<pre id="note_text">{{.}}</pre>
+  </div>
+  <div class="form-group text-center">
+    <a href="/" class="btn btn-lg btn-success">Create another note</a>
+  </div>
+{{ end }}
