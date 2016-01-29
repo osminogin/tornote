@@ -5,7 +5,7 @@ all: format tests install
 
 deps:
 	@echo "--> Getting dependencies"
-	@go get ./
+	@go get ./...
 
 format:
 	@echo "--> Running go fmt"
