@@ -1,0 +1,12 @@
+language: go
+sudo: false
+go:
+  - 1.4
+  - 1.5
+  - tip
+install: make deps
+script:
+  - go get -t -v ./...
+  - diff -u <(echo -n) <(gofmt -d -s .)
+  - go tool vet .
+  - go test -v -race ./...
