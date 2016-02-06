@@ -1,7 +1,7 @@
 GITCOMMIT = $(shell git rev-parse --short HEAD)
 GOLDFLAGS = "-X main.GitCommit=$(GITCOMMIT)"
 
-all: format tests install
+default: tests
 
 deps:
 	@echo "--> Getting dependencies"

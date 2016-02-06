@@ -17,37 +17,19 @@
 package tornote
 
 import (
-	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
-	"log"
+	"errors"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
-type Server struct {
-	DB   *sql.DB
-	Host string
-	Key  string
-}
+// Wrapper around template.ExecuteTemplate method.
+func renderTemplate(w http.ResponseWriter, name string, data interface{}) error {
+	tmpl, ok := templates[name]
+	if !ok {
+		return errors.New("This template doesn't exist.")
+	}
 
-// Open database connection.
-func (s *Server) OpenDB(path string) (err error) {
-	// XXX: Check err from sql.Open
-	s.DB, err = sql.Open("sqlite3", path)
-	err = s.DB.Ping()
-	return
-}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	tmpl.ExecuteTemplate(w, "base", data)
 
-// Running daemon process.
-func (s *Server) Run() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", frontPageHandler).Methods("GET")
-
-	api := router.PathPrefix("/api/v1").Subrouter()
-	api.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
-	api.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
-
-	log.Printf("Starting tornote server on %s", s.Host)
-	log.Fatal(http.ListenAndServe(s.Host, router))
+	return nil
 }

@@ -17,10 +17,9 @@
 package tornote
 
 import (
-	"log"
+	"database/sql"
 	"net/http"
 
-	"github.com/NebulousLabs/Sia/crypto"
 	"github.com/gorilla/mux"
 )
 
@@ -30,29 +29,26 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // readNoteHandler show warn screen and destroy note.
-func readNoteHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	// XXX:
-	data := vars["id"]
-	// XXX: Get ciphertext from persistent storage by note id.
-	// XXX: Decrypt plaintext.
-	// c.Text, err = key.DecryptBytes(ciphertext)
-	renderTemplate(w, "note.html", data)
+func readNoteHandler(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		// XXX: Get ciphertext from persistent storage by note id.
+		// XXX: Decrypt plaintext.
+		// c.Text, err = key.DecryptBytes(ciphertext)
+		renderTemplate(w, "note.html", id)
+	})
 }
 
 // saveNoteHandler save secret note to persistent datastore.
-func saveNoteHandler(w http.ResponseWriter, r *http.Request) {
-	// XXX:
-	data := "123213213213"
+func saveNoteHandler(db *sql.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// XXX:
+		data := "123213213213"
 
-	key, _ := crypto.GenerateTwofishKey()
-	plaintext := r.FormValue("body")
-	ciphertext, _ := key.EncryptBytes([]byte(plaintext))
+		//encrypted := r.FormValue("body")
 
-	// XXX: Save ciphertext in database, show key to user
-	log.Printf("key = %v\n", key)
-	log.Printf("ciphertext = %v\n", ciphertext)
-
-	// XXX: Save key and note id to securecookie and redirect
-	renderTemplate(w, "done.html", data)
+		// XXX: Save key and note id to securecookie and redirect
+		renderTemplate(w, "done.html", data)
+	})
 }
