@@ -21,6 +21,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // frontPageHandler render home page.
@@ -28,27 +29,41 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "index.html", nil)
 }
 
-// readNoteHandler show warn screen and destroy note.
+// readNoteHandler print encrypted data for client-side decrypt and destroy note.
 func readNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var encrypted string
 		vars := mux.Vars(r)
-		id := vars["id"]
-		// XXX: Get ciphertext from persistent storage by note id.
-		// XXX: Decrypt plaintext.
-		// c.Text, err = key.DecryptBytes(ciphertext)
-		renderTemplate(w, "note.html", id)
+
+		// Get encrypted note or return error
+		err := db.QueryRow("SELECT encrypted from notes where id = ?", vars["id"]).Scan(&encrypted)
+		switch {
+		case err == sql.ErrNoRows:
+			http.Error(w, err.Error(), http.StatusNotFound)
+		case err != nil:
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		// Deferred destroy note
+		defer func() {
+			db.QueryRow("DELETE from notes where id = ?", vars["id"])
+		}()
+
+		// Print encrypted note to user
+		renderTemplate(w, "note.html", encrypted)
 	})
 }
 
-// saveNoteHandler save secret note to persistent datastore.
+// saveNoteHandler save secret note to persistent datastore and show ID.
 func saveNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// XXX:
-		data := "123213213213"
+		encrypted := r.FormValue("encrypted")
+		result, err := db.Exec("INSERT INTO notes VALUES (encrypted, ?)", encrypted)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 
-		//encrypted := r.FormValue("body")
-
-		// XXX: Save key and note id to securecookie and redirect
-		renderTemplate(w, "done.html", data)
+		// XXX: Show encryption key for this note to user
+		renderTemplate(w, "done.html", result.LastInsertId())
 	})
 }
