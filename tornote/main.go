@@ -16,18 +16,47 @@
 
 package main
 
-//import "github.com/osminogin/tornote"
 import (
 	"flag"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/osminogin/tornote"
 )
 
 var (
-	addr = flag.String("addr", ":8000", "The address to bind to")
-	secret = flag.String("secret", "", "Secret key")
+	addr    = flag.String("addr", ":8000", "The address to bind to")
+	secret  = flag.String("secret", "", "Secret key")
+	db      = flag.String("db", "./db.sqlite3", "Path to sqlite3 database")
+	version = flag.Bool("version", false, "Print server version")
 )
+
+var GitCommit string
 
 func main() {
 	flag.Parse()
 
-	// TODO:
+	if *version {
+		fmt.Printf("Version: git%s\n", GitCommit)
+		os.Exit(0)
+	}
+
+	server := &tornote.Server{Host: *addr}
+
+	// We already have some encrypted notes?
+	if _, err := os.Stat(*db); err == nil && *secret == "" {
+		log.Fatal("You must specify secret key if db file exist")
+	}
+
+	// Connecting to database
+	if err := server.OpenDB(*db); err != nil {
+		log.Fatal(err)
+	}
+	defer server.DB.Close()
+
+	// XXX: Init templates (from there or inside tornote package)
+
+	// Starting
+	server.Run()
 }
