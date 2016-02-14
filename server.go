@@ -18,11 +18,11 @@ package tornote
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Server struct {
@@ -31,12 +31,17 @@ type Server struct {
 	Key  string
 }
 
-// Open database connection.
+// Open and check database connection.
 func (s *Server) OpenDB(path string) (err error) {
-	// XXX: Check err from sql.Open
-	s.DB, err = sql.Open("sqlite3", path)
-	err = s.DB.Ping()
-	return
+	if s.DB, err = sql.Open("sqlite3", path); err != nil {
+		return err
+	}
+	// Checking connection
+	if err = s.DB.Ping(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Running daemon process.
