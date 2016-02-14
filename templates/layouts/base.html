@@ -1,7 +1,7 @@
 {{ define "base" }}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,34 +14,37 @@
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
           crossorigin="anonymous">
     <style type="text/css">
-      .navbar-default .navbar-brand {
-        font-size: 26px;
-        color: #000 !important;
-      }
-      .navbar-header span.text-muted {
-        color: #aeaeae;
-        margin-left: 6px;
-      }
-      .container {
-        max-width: 730px;
-      }
-      #content {
-        margin-top: 70px;
-      }
+        .navbar-default .navbar-brand {
+            font-size: 26px;
+            color: #000 !important;
+        }
+
+        .navbar-header span.text-muted {
+            color: #aeaeae;
+            margin-left: 6px;
+        }
+
+        .container {
+            max-width: 730px;
+        }
+
+        #content {
+            margin-top: 70px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
     {{ template "navbar" . }}
 
     <div id="content" class="container">
-      {{ template "content" . }}
+        {{ template "content" . }}
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
-  </body>
+</body>
 </html>
 {{ end }}
