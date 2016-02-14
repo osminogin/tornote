@@ -46,13 +46,12 @@ func (s *Server) OpenDB(path string) (err error) {
 
 // Running daemon process.
 func (s *Server) Run() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", frontPageHandler).Methods("GET")
+	r := mux.NewRouter().StrictSlash(true)
 
-	api := router.PathPrefix("/api/v1").Subrouter()
-	api.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
-	api.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
+	r.HandleFunc("/", frontPageHandler).Methods("GET")
+	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
+	r.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
 
 	log.Printf("Starting tornote server on %s", s.Host)
-	log.Fatal(http.ListenAndServe(s.Host, router))
+	log.Fatal(http.ListenAndServe(s.Host, r))
 }
