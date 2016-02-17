@@ -1,7 +1,7 @@
 {{ define "title" }}Anonymous Self-destructing Notes{{ end }}
 
 {{ define "content" }}
-<form action="." method="post">
+<form action="/note" method="post">
     <div class="form-group">
         <label for="note">Write your note below:</label>
         <textarea id="note" class="form-control" name="body" cols="80" rows="4"></textarea>
