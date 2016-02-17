@@ -43,11 +43,6 @@ func main() {
 
 	server := &tornote.Server{Host: *addr}
 
-	// We already have some encrypted notes?
-	if _, err := os.Stat(*db); err == nil && *secret == "" {
-		log.Fatal("You must specify secret key if db file exist")
-	}
-
 	// Connecting to database
 	if err := server.OpenDB(*db); err != nil {
 		log.Fatal(err)
