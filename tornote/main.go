@@ -27,7 +27,6 @@ import (
 
 var (
 	addr    = flag.String("addr", ":8000", "The address to bind to")
-	secret  = flag.String("secret", "", "Secret key")
 	db      = flag.String("db", "./db.sqlite3", "Path to sqlite3 database")
 	version = flag.Bool("version", false, "Print server version")
 )
@@ -54,8 +53,6 @@ func main() {
 		log.Fatal(err)
 	}
 	defer server.DB.Close()
-
-	// XXX: Init templates (from there or inside tornote package)
 
 	// Starting
 	server.Run()
