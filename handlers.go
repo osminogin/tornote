@@ -37,11 +37,9 @@ func readNoteHandler(db *sql.DB) http.Handler {
 
 		// Get encrypted note or return error
 		err := db.QueryRow("SELECT encrypted from notes where id = ?", vars["id"]).Scan(&encrypted)
-		switch {
-		case err == sql.ErrNoRows:
-			http.Error(w, err.Error(), http.StatusNotFound)
-		case err != nil:
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		// Deferred destroy note
@@ -58,12 +56,14 @@ func readNoteHandler(db *sql.DB) http.Handler {
 func saveNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encrypted := r.FormValue("encrypted")
-		result, err := db.Exec("INSERT INTO notes VALUES (encrypted, ?)", encrypted)
+		_, err := db.Exec("INSERT INTO notes VALUES (encrypted, ?)", encrypted)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		// XXX: Show encryption key for this note to user
-		renderTemplate(w, "done.html", result.LastInsertId())
+		//renderTemplate(w, "done.html", result.LastInsertId())
+		renderTemplate(w, "done.html", nil)
 	})
 }
