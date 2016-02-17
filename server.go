@@ -52,6 +52,11 @@ func (s *Server) Run() {
 	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
 	r.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
 
+	// Initialize templates (durty solution)
+	if err := initTemplates(); err != nil {
+		log.Fatal(err)
+	}
+
 	log.Printf("Starting tornote server on %s", s.Host)
 	log.Fatal(http.ListenAndServe(s.Host, r))
 }

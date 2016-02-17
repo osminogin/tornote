@@ -18,14 +18,59 @@ package tornote
 
 import (
 	"errors"
+	"html/template"
+	"log"
 	"net/http"
 )
+
+var templates map[string]*template.Template
+
+// Load and compile templates files from bindata.
+func initTemplates() error {
+	if templates == nil {
+		templates = make(map[string]*template.Template)
+	}
+
+	layout, err := Asset("templates/layout/base.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pages, err := AssetDir("templates")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range pages {
+		// Skip layout dir
+		if file == "layout" {
+			continue
+		}
+		// Get template data from bindata
+		templateData, err := Asset("templates/" + file)
+		if err != nil {
+			return err
+		}
+		// Compile layout
+		target, err := template.New(file).Parse(string(layout))
+		if err != nil {
+			return err
+		}
+		// Compile target template
+		templates[file], err = target.Parse(string(templateData))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 // Wrapper around template.ExecuteTemplate method.
 func renderTemplate(w http.ResponseWriter, name string, data interface{}) error {
 	tmpl, ok := templates[name]
 	if !ok {
-		return errors.New("This template doesn't exist.")
+		return errors.New("This template doesn't exist")
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
