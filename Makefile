@@ -6,7 +6,6 @@ default: tests
 
 deps:
 	@echo "--> Getting dependencies"
-	@go get ./...
 	@go get -u $(GOTOOLS)
 
 format:
@@ -21,7 +20,7 @@ install: deps bindata
 	@echo "--> Build and install binary"
 	@go install -ldflags $(GOLDFLAGS) github.com/osminogin/tornote/tornote
 
-bindata:
+bindata: deps
 	@echo "--> Generate bindata"
 	@go-bindata -pkg tornote templates/...
 
