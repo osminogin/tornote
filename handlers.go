@@ -36,7 +36,7 @@ func readNoteHandler(db *sql.DB) http.Handler {
 		vars := mux.Vars(r)
 
 		// Get encrypted note or return error
-		err := db.QueryRow("SELECT encrypted from notes where id = ?", vars["id"]).Scan(&encrypted)
+		err := db.QueryRow("SELECT encrypted FROM notes WHERE id = ?", vars["id"]).Scan(&encrypted)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -44,7 +44,7 @@ func readNoteHandler(db *sql.DB) http.Handler {
 
 		// Deferred destroy note
 		defer func() {
-			db.QueryRow("DELETE from notes where id = ?", vars["id"])
+			db.Exec("DELETE FROM notes WHERE id = ?", vars["id"])
 		}()
 
 		// Print encrypted note to user
@@ -55,15 +55,21 @@ func readNoteHandler(db *sql.DB) http.Handler {
 // saveNoteHandler save secret note to persistent datastore and show ID.
 func saveNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		encrypted := r.FormValue("encrypted")
-		_, err := db.Exec("INSERT INTO notes VALUES (encrypted, ?)", encrypted)
+		encrypted := r.FormValue("body")
+
+		res, err := db.Exec("INSERT INTO notes (encrypted) VALUES (?)", encrypted)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		id, err := res.LastInsertId()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// XXX: Show encryption key for this note to user
-		//renderTemplate(w, "done.html", result.LastInsertId())
-		renderTemplate(w, "done.html", nil)
+		renderTemplate(w, "done.html", id)
 	})
 }
