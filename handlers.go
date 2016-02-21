@@ -17,6 +17,7 @@
 package tornote
 
 import (
+	"fmt"
 	"database/sql"
 	"net/http"
 
@@ -69,7 +70,9 @@ func saveNoteHandler(db *sql.DB) http.Handler {
 			return
 		}
 
-		// XXX: Show encryption key for this note to user
-		renderTemplate(w, "done.html", id)
+		// XXX: Add dencryption key to link
+		link := fmt.Sprintf("http://%v/note/%v", r.Host, id)
+
+		renderTemplate(w, "done.html", link)
 	})
 }
