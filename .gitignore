@@ -1,3 +1,5 @@
 .idea/
+
+public/vendor/
 db.sqlite3
 bindata.go
