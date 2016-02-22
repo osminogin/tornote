@@ -49,6 +49,7 @@ func (s *Server) Run() {
 	r := mux.NewRouter().StrictSlash(true)
 
 	r.HandleFunc("/", frontPageHandler).Methods("GET")
+	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
 	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
 	r.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
 

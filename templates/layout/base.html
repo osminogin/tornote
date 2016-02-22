@@ -10,28 +10,8 @@
 
     <title>Tornote - {{ template "title" . }}</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-          crossorigin="anonymous">
-    <style type="text/css">
-        .navbar-default .navbar-brand {
-            font-size: 26px;
-            color: #000 !important;
-        }
-
-        .navbar-header span.text-muted {
-            color: #aeaeae;
-            margin-left: 6px;
-        }
-
-        .container {
-            max-width: 730px;
-        }
-
-        #content {
-            margin-top: 70px;
-        }
-    </style>
+    <link rel="stylesheet" href="/public/vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
 
@@ -49,10 +29,10 @@
         {{ template "content" . }}
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-            crossorigin="anonymous"></script>
+    <script src="/public/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/public/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/public/vendor/cryptojs/rollups/aes.js"></script>
+    <script src="/public/main.js"></script>
 </body>
 </html>
 {{ end }}

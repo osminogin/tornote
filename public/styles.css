@@ -1,0 +1,17 @@
+.navbar-default .navbar-brand {
+    font-size: 26px;
+    color: #000 !important;
+}
+
+.navbar-header span.text-muted {
+    color: #aeaeae;
+    margin-left: 6px;
+}
+
+.container {
+    max-width: 730px;
+}
+
+#content {
+    margin-top: 70px;
+}

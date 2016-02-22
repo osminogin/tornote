@@ -16,12 +16,19 @@ tests:
 	@echo "--> Running go test"
 	@go test -v ./...
 
-install: deps bindata
+install: bindata
 	@echo "--> Build and install binary"
 	@go install -ldflags $(GOLDFLAGS) github.com/osminogin/tornote/tornote
 
 bindata: deps
 	@echo "--> Generate bindata"
-	@go-bindata -pkg tornote templates/...
+	@go-bindata -pkg tornote templates/... \
+		public/vendor/jquery/dist/jquery.min.js \
+		public/vendor/bootstrap/dist/css/bootstrap.min.css \
+		public/vendor/bootstrap/dist/js/bootstrap.min.js \
+		public/vendor/cryptojs/rollups/aes.js \
+		public/main.js \
+		public/styles.css
+
 
 .PHONY: all deps format tests install bindata

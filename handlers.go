@@ -17,9 +17,10 @@
 package tornote
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
@@ -28,6 +29,23 @@ import (
 // frontPageHandler render home page.
 func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "index.html", nil)
+}
+
+// publicFileHandler get file from bindata or return not found error.
+func publicFileHandler(w http.ResponseWriter, r *http.Request) {
+	data, err := Asset(r.URL.Path[1:])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	// Set headers by file extension
+	switch filepath.Ext(r.URL.Path[1:]) {
+	case ".js":
+		w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	case ".css":
+		w.Header().Set("Content-Type", "text/css")
+	}
+	w.Write(data)
 }
 
 // readNoteHandler print encrypted data for client-side decrypt and destroy note.
