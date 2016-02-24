@@ -1,15 +1,30 @@
-//var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
 $(document).ready(function() {
     $("#main").removeClass("hidden");
     $("#warn").remove();
+
+    // Submit new note
     $("#note").submit(function(event) {
-        var data = "aaa";
-        var secret = "1234567890";
-        var encrypted = CryptoJS.AES.encrypt(data, secret);
-        $.post( "/note/aaa", {body: encrypted}, function(data) {
+        var form = $(this);
+        var text = form.find("textarea").val();
+        var secret = CryptoJS.lib.WordArray.random(128/8);
+        var encrypted = CryptoJS.AES.encrypt(text, secret);
+
+        $.ajax({
+            url: form.attr("action"),
+            method: "POST",
+            data: {body: encodeURIComponent(encrypted)},
+            success: function(data) {
+                $("#note").addClass("hidden");
+                $("#done").removeClass("hidden");
+                // XXX:
                 window.alert(data);
+            }
         });
         event.preventDefault();
-        event.unbind();
     });
+
+    // Display link
+
+    // Show secret note
+    //var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
 });
