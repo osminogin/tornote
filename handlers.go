@@ -38,6 +38,7 @@ func publicFileHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+
 	// Set headers by file extension
 	switch filepath.Ext(r.URL.Path[1:]) {
 	case ".js":
@@ -45,6 +46,7 @@ func publicFileHandler(w http.ResponseWriter, r *http.Request) {
 	case ".css":
 		w.Header().Set("Content-Type", "text/css")
 	}
+
 	w.Write(data)
 }
 
@@ -71,7 +73,7 @@ func readNoteHandler(db *sql.DB) http.Handler {
 	})
 }
 
-// saveNoteHandler save secret note to persistent datastore and show ID.
+// saveNoteHandler save secret note to persistent datastore and return note ID.
 func saveNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encrypted := r.FormValue("body")
@@ -88,9 +90,6 @@ func saveNoteHandler(db *sql.DB) http.Handler {
 			return
 		}
 
-		// XXX: Add dencryption key to link
-		link := fmt.Sprintf("http://%v/note/%v", r.Host, id)
-
-		renderTemplate(w, "done.html", link)
+		fmt.Fprint(w, id)
 	})
 }
