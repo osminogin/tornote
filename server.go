@@ -48,10 +48,11 @@ func (s *Server) OpenDB(path string) (err error) {
 func (s *Server) Run() {
 	r := mux.NewRouter().StrictSlash(true)
 
+	// Handlers
 	r.HandleFunc("/", frontPageHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
 	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
-	r.Handle("/note/{id}", readNoteHandler(s.DB)).Methods("GET")
+	r.Handle("/{id}", readNoteHandler(s.DB)).Methods("GET")
 
 	// Initialize templates (durty solution)
 	if err := initTemplates(); err != nil {

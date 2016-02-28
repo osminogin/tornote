@@ -59,7 +59,7 @@ func readNoteHandler(db *sql.DB) http.Handler {
 		// Get encrypted note or return error
 		err := db.QueryRow("SELECT encrypted FROM notes WHERE id = ?", vars["id"]).Scan(&encrypted)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.NotFound(w, r)
 			return
 		}
 
