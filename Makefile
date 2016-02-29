@@ -26,7 +26,6 @@ bindata: deps
 		public/vendor/jquery/dist/jquery.min.js \
 		public/vendor/bootstrap/dist/css/bootstrap.min.css \
 		public/vendor/bootstrap/dist/js/bootstrap.min.js \
-		public/vendor/cryptojs/rollups/aes.js \
 		public/main.js \
 		public/styles.css
 

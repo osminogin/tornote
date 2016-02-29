@@ -2,29 +2,34 @@ $(document).ready(function() {
     $("#main").removeClass("hidden");
     $("#warn").remove();
 
-    // Submit new note
+    // Submit new secret note
     $("#note").submit(function(event) {
+        event.preventDefault();
         var form = $(this);
         var text = form.find("textarea").val();
-        var secret = CryptoJS.lib.WordArray.random(128/8);
-        var encrypted = CryptoJS.AES.encrypt(text, secret);
+        var secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(2));
+        var encrypted = sjcl.encrypt(secret, text);
 
         $.ajax({
             url: form.attr("action"),
             method: "POST",
-            data: {body: encodeURIComponent(encrypted)},
-            success: function(data) {
+            data: {body: encrypted.toString()},
+            success: function(id) {
+                var link = window.location.href.toString() + id + "#" + secret.toString();
+                $("#secret_link").text(link);
                 $("#note").addClass("hidden");
                 $("#done").removeClass("hidden");
-                // XXX:
-                window.alert(data);
             }
         });
-        event.preventDefault();
     });
 
-    // Display link
+    // Show decrypted secret note
+    if($("#secret_note").length > 0){
+        var secret = window.location.hash.substring(1);
+        var ciphertext = $("#secret_note").text();
+        var decrypted = sjcl.decrypt(secret, ciphertext);
+        $("#secret_note").html(decrypted);
+        $("#secret_note").removeClass("hidden");
+    };
 
-    // Show secret note
-    //var decrypted = CryptoJS.AES.decrypt(encrypted, "Secret Passphrase");
 });

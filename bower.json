@@ -8,7 +8,7 @@
   "description": "Anonymous self-destructing notes written in Go",
   "license": "AGPLv3",
   "dependencies": {
-    "cryptojs": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/crypto-js/CryptoJS%20v3.1.2.zip",
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "sjcl": "~1.0.3"
   }
 }

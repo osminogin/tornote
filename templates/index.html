@@ -1,6 +1,7 @@
 {{ define "title" }}Anonymous Self-destructing Notes{{ end }}
 
 {{ define "content" }}
+<!-- Warning -->
 <div id="warn" class="alert alert-danger" role="alert">
     <strong>Warning!</strong> You must enable JavaScript because all encryption going inside web browser.
 </div>
@@ -21,8 +22,8 @@
 <!-- Secret link -->
 <div id="done" class="hidden">
     <div class="form-group">
-        <label for="note_link">Your secret message available on the link:</label>
-        <pre id="note_link">{{.}}</pre>
+        <label for="secret_link">Your secret message available on the link:</label>
+        <pre id="secret_link"></pre>
     </div>
     <div class="form-group text-center">
         <a href="." class="btn btn-lg btn-danger">Read and destroy</a>
