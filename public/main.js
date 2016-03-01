@@ -7,7 +7,7 @@ $(document).ready(function() {
         event.preventDefault();
         var form = $(this);
         var text = form.find("textarea").val();
-        var secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(2));
+        var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(3));
         var encrypted = sjcl.encrypt(secret, text);
 
         $.ajax({
@@ -15,7 +15,7 @@ $(document).ready(function() {
             method: "POST",
             data: {body: encrypted.toString()},
             success: function(id) {
-                var link = window.location.href.toString() + id + "#" + secret.toString();
+                var link = window.location.href.toString() + id + "#" + secret;
                 $("#secret_link").text(link);
                 $("#note").addClass("hidden");
                 $("#done").removeClass("hidden");

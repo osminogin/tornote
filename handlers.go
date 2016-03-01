@@ -17,7 +17,9 @@
 package tornote
 
 import (
+	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"path/filepath"
@@ -77,14 +79,20 @@ func readNoteHandler(db *sql.DB) http.Handler {
 func saveNoteHandler(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encrypted := r.FormValue("body")
+		secret := make([]byte, 11)
 
-		res, err := db.Exec("INSERT INTO notes (encrypted) VALUES (?)", encrypted)
+		// Generate random data for note id
+		_, err := rand.Read(secret)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		id, err := res.LastInsertId()
+		// Encode note id with URL safe format
+		id := base64.RawURLEncoding.EncodeToString(secret)
+
+		// Save data to database
+		_, err = db.Exec("INSERT INTO notes (id, encrypted) VALUES (?, ?)", id, encrypted)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
