@@ -4,7 +4,6 @@ $(document).ready(function() {
 
     // Submit new secret note
     $("#note").submit(function(event) {
-        event.preventDefault();
         var form = $(this);
         var text = form.find("textarea").val();
         var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(3));
@@ -17,10 +16,13 @@ $(document).ready(function() {
             success: function(id) {
                 var link = window.location.href.toString() + id + "#" + secret;
                 $("#secret_link").text(link);
+                $("a", "#done").first().attr("href", link);
                 $("#note").addClass("hidden");
                 $("#done").removeClass("hidden");
+                SelectText("secret_link");
             }
         });
+        event.preventDefault();
     });
 
     // Show decrypted secret note
@@ -33,3 +35,22 @@ $(document).ready(function() {
     };
 
 });
+
+// Soluiton from https://stackoverflow.com/questions/985272/
+function SelectText(element) {
+    var doc = document,
+        text = doc.getElementById(element),
+        range,
+        selection;
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
