@@ -2,9 +2,11 @@
 
 {{ define "content" }}
 <!-- Warning -->
-<div id="warn" class="alert alert-danger" role="alert">
-    <strong>Warning!</strong> You must enable JavaScript because all encryption going inside web browser.
-</div>
+<noscript>
+    <div id="warn" class="alert alert-danger" role="alert">
+        <strong>Warning!</strong> You must enable JavaScript because all encryption going inside web browser.
+    </div>
+</noscript>
 
 <!-- Submit form -->
 <div id="main" class="hidden">
