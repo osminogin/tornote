@@ -18,14 +18,13 @@ tests:
 
 install: bindata
 	@echo "--> Build and install binary"
-	@go install -ldflags $(GOLDFLAGS) github.com/osminogin/tornote/tornote
+	@go get ./...
+	@go install -ldflags $(GOLDFLAGS) ./...
 
 bindata: deps
 	@echo "--> Generate bindata"
 	@go-bindata -pkg tornote templates/... \
-		public/vendor/jquery/dist/jquery.min.js \
-		public/vendor/bootstrap/dist/css/bootstrap.min.css \
-		public/vendor/bootstrap/dist/js/bootstrap.min.js \
+		public/vendor/sjcl/sjcl.js \
 		public/main.js \
 		public/styles.css
 
