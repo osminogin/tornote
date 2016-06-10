@@ -10,7 +10,9 @@
 
     <title>Tornote - {{ template "title" . }}</title>
 
-    <link rel="stylesheet" href="/public/vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
@@ -33,15 +35,13 @@
     <footer class="footer">
         <div class="container">
             <p class="text-muted">
-                Tornote is open source software.
                 Source code available on <a href="https://github.com/osminogin/tornote">GitHub</a>.
             </p>
         </div>
     </footer>
 
-    <script src="/public/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="/public/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="/public/vendor/sjcl/sjcl.js"></script>
     <script src="/public/main.js"></script>
 </body>
 </html>
