@@ -12,9 +12,17 @@
 <div id="main" class="hidden">
     <form id="note" action="/note" method="post">
         <div class="form-group">
-            <label for="note">Write your note below:</label>
+            <label for="note">
+                Write your note below
+                <span class="glyphicon glyphicon-edit small"></span>:
+            </label>
             <textarea class="form-control" name="body" cols="80" rows="4"></textarea>
-            <p class="help-block">Text will be encrypted with AES-256 algorithm and random key (stored on client-side).</p>
+            <p class="help-block">
+                Text will be encrypted with
+                <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES-256</a>
+                <span class="glyphicon glyphicon-lock small"></span>
+                algorithm and secret (generated on client-side).
+            </p>
         </div>
         <div class="form-group text-center">
             <button type="submit" class="btn btn-lg btn-success">
