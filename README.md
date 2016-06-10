@@ -1,8 +1,8 @@
 # Tornote [![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/osminogin/tornote/badge.svg?branch=master)](https://coveralls.io/github/osminogin/tornote?branch=master)
 
-Anonymous self-destructing notes written in Go and Stanford Javascript Crypto Library (SJCL) on client-side.
+Anonymous self-destructing notes written in Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
 
-Server stores data and returns to clients only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
+Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
 
 Latest stable version available on https://tornote.xyz
 
@@ -11,7 +11,7 @@ Latest stable version available on https://tornote.xyz
 ```bash
 $ bower install
 $ make install
-$ tornote&
+$ tornote &
 ```
 
 ## Running with Docker
