@@ -36,7 +36,8 @@ func (s *Server) OpenDB(path string) (err error) {
 	if s.DB, err = sql.Open("sqlite3", path); err != nil {
 		return err
 	}
-	// Checking connection
+
+	// Ping DB connection
 	if err = s.DB.Ping(); err != nil {
 		return err
 	}
@@ -48,17 +49,18 @@ func (s *Server) OpenDB(path string) (err error) {
 func (s *Server) Run() {
 	r := mux.NewRouter().StrictSlash(true)
 
-	// Handlers
+	// HTTP handlers
 	r.HandleFunc("/", frontPageHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
 	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
 	r.Handle("/{id}", readNoteHandler(s.DB)).Methods("GET")
 
-	// Initialize templates (durty solution)
+	// Prebuild templates
 	if err := initTemplates(); err != nil {
 		log.Fatal(err)
 	}
 
+	// Listen server on port 8080
 	log.Printf("Starting tornote server on %s", s.Host)
 	log.Fatal(http.ListenAndServe(s.Host, r))
 }

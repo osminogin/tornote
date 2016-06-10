@@ -1,6 +1,6 @@
 {
   "name": "tornote",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "homepage": "https://github.com/osminogin/tornote",
   "authors": [
     "Vladimir Osintsev <osintsev@gmail.com>"
@@ -8,7 +8,6 @@
   "description": "Anonymous self-destructing notes written in Go",
   "license": "AGPLv3",
   "dependencies": {
-    "bootstrap": "~3.3.6",
     "sjcl": "~1.0.3"
   }
 }
