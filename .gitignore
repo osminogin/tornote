@@ -1,6 +1,7 @@
 .idea/
 
 .coveralls.yml
+coverage.out
 public/vendor/
 db.sqlite3
 bindata.go

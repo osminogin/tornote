@@ -1,12 +1,12 @@
 GITCOMMIT = $(shell git rev-parse --short HEAD)
 GOLDFLAGS = "-X main.GitCommit=$(GITCOMMIT)"
-GOTOOLS = "github.com/jteeuwen/go-bindata/..."
+GOTOOLS = github.com/mattn/goveralls golang.org/x/tools/cmd/cover github.com/jteeuwen/go-bindata/...
 
 default: tests
 
 deps:
 	@echo "--> Getting dependencies"
-	@go get -u $(GOTOOLS)
+	@$(foreach gotool,$(GOTOOLS),$(shell go get -u $(gotool)))
 
 format:
 	@echo "--> Running go fmt"
@@ -16,7 +16,7 @@ tests:
 	@echo "--> Running go test"
 	@go test -v ./...
 
-install: bindata
+install: bindata format
 	@echo "--> Build and install binary"
 	@go get ./...
 	@go install -ldflags $(GOLDFLAGS) ./...
