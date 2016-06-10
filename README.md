@@ -9,8 +9,16 @@ Latest stable version available on www.tornote.xyz
 ## Getting started
 
 ```bash
+bower install
 make install
 tornote
+```
+
+## Running with Docker
+
+```bash
+docker build -t tornote-app .
+docker run -p 80:8080 --name tornote tornote-app
 ```
 
 ## License
