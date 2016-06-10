@@ -1,4 +1,4 @@
-# Tornote [![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/osminogin/tornote/badge.svg?branch=master) (https://coveralls.io/github/osminogin/tornote?branch=master)]
+# Tornote [![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/osminogin/tornote/badge.svg?branch=master)](https://coveralls.io/github/osminogin/tornote?branch=master)
 
 Anonymous self-destructing notes written in Go and Stanford Javascript Crypto Library (SJCL) on client-side.
 
