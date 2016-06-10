@@ -14,9 +14,13 @@
         <div class="form-group">
             <label for="note">Write your note below:</label>
             <textarea class="form-control" name="body" cols="80" rows="4"></textarea>
+            <p class="help-block">Text will be encrypted with AES-256 algorithm and random key (stored on client-side).</p>
         </div>
         <div class="form-group text-center">
-            <input type="submit" class="btn btn-lg btn-success" value="Create note" />
+            <button type="submit" class="btn btn-lg btn-success">
+                <span class="glyphicon glyphicon-record small"></span>
+                Create note
+            </button>
         </div>
     </form>
 </div>
@@ -28,8 +32,14 @@
         <pre id="secret_link"></pre>
     </div>
     <div class="form-group text-center">
-        <a href="." class="btn btn-lg btn-danger">Read and destroy</a>
-        <a href="/" class="btn btn-lg btn-success">Create another note</a>
+        <a href="." class="btn btn-lg btn-danger">
+            <span class="glyphicon glyphicon-fire small"></span>
+            Read and destroy
+        </a>
+        <a href="/" class="btn btn-lg btn-success">
+            <span class="glyphicon glyphicon-record small"></span>
+            Create another note
+        </a>
     </div>
 </div>
 {{ end }}
