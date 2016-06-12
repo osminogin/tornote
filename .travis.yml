@@ -6,12 +6,11 @@ go:
   - tip
 before_install:
   - npm install -g bower
+install:
   - bower install
-install: make bindata
+  - make deps
 script:
-  - go get -t -v ./...
-  - go tool vet .
-  - go test -v -race ./...
+  - make tests
   - go test -v -covermode=count -coverprofile=coverage.out
   - $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
 env:

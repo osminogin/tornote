@@ -4,30 +4,34 @@ GOTOOLS = github.com/mattn/goveralls golang.org/x/tools/cmd/cover github.com/jte
 
 default: tests
 
-deps:
-	@echo "--> Getting dependencies"
-	@$(foreach gotool,$(GOTOOLS),$(shell go get -u $(gotool)))
-
-format:
-	@echo "--> Running go fmt"
-	@go fmt ./...
-
-tests:
-	@echo "--> Running go test"
+tests: format
+	@echo "--> Running tests"
+	@go tool vet .
 	@go test -v ./...
 
-install: bindata format
+tools:
+	@echo "--> Getting tools"
+	@$(foreach gotool,$(GOTOOLS),$(shell go get -u $(gotool)))
+
+deps: bindata
+	@echo "--> Getting dependencies"
+	@go get -t -v ./...
+
+install: deps
 	@echo "--> Build and install binary"
-	@go get ./...
 	@go install -ldflags $(GOLDFLAGS) ./...
 
-bindata: deps
+bindata: tools
 	@echo "--> Generate bindata"
 	@go-bindata -pkg tornote templates/... \
 		public/vendor/jquery/dist/jquery.slim.min.js \
 		public/vendor/sjcl/sjcl.js \
 		public/main.js \
 		public/styles.css
+
+format:
+	@echo "--> Running go fmt"
+	@go fmt ./...
 
 
 .PHONY: all deps format tests install bindata
