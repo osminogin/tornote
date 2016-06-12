@@ -14,6 +14,8 @@
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
           crossorigin="anonymous">
     <link rel="stylesheet" href="/public/styles.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -42,7 +44,9 @@
         </div>
     </footer>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script> // Local fallback for jQuery library served with CDN
+        if (!window.jQuery) { document.write('<script src="/public/vendor/jquery/dist/jquery.slim.min.js"><\/script>'); }
+    </script>
     <script src="/public/vendor/sjcl/sjcl.js"></script>
     <script src="/public/main.js"></script>
 </body>
