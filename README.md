@@ -6,6 +6,18 @@ Server stores only encrypted data. JavaScript must be enabled, because notes dec
 
 Latest stable version available on https://tornote.xyz
 
+## Security
+
+How safe Tornote compared with other similar services? More than.
+
+- All private data in the clear text is not leaving the client-side (without encryption).
+
+- Server stored only anonymous encrypted data (without any reference to author or reader).
+
+- Note decryption executed on the client-side via the SJCL. After reading the encrypted data removed on server.
+
+If you have ideas to improve the our safety/security so far as possible please post the issue.
+
 ## Getting started
 
 ```bash
@@ -17,7 +29,7 @@ $ tornote &
 ## Running with Docker
 
 ```bash
-$ ocker build -t tornote-app .
+$ docker build -t tornote-app .
 $ docker run -p 80:8080 --name tornote tornote-app
 ```
 
