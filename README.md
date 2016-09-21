@@ -21,6 +21,8 @@ If you have ideas to improve the our safety/security so far as possible please p
 ## Getting started
 
 ```bash
+$ go get -u github.com/osminogin/tornote
+$ cd $GOPATH/src/github.com/osminogin/tornote
 $ bower install
 $ make install
 $ tornote &
