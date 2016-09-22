@@ -26,7 +26,7 @@ import (
 )
 
 var (
-	addr    = flag.String("addr", ":8000", "The address to bind to")
+	address = flag.String("addr", ":8000", "The address and port to listen")
 	db      = flag.String("db", "./db.sqlite3", "Path to sqlite3 database")
 	version = flag.Bool("version", false, "Print server version")
 )
@@ -41,7 +41,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	server := &tornote.Server{Host: *addr}
+	server := tornote.NewServer(*address)
 
 	// Connecting to database
 	if err := server.OpenDB(*db); err != nil {

@@ -25,14 +25,19 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Server struct {
+type server struct {
 	DB   *sql.DB
-	Host string
+	host string
 	Key  string
 }
 
+// Constructor for new server.
+func NewServer(address string) *server {
+	return &server{host: address}
+}
+
 // Open and check database connection.
-func (s *Server) OpenDB(path string) (err error) {
+func (s *server) OpenDB(path string) (err error) {
 	if s.DB, err = sql.Open("sqlite3", path); err != nil {
 		return err
 	}
@@ -46,7 +51,7 @@ func (s *Server) OpenDB(path string) (err error) {
 }
 
 // Running daemon process.
-func (s *Server) Run() {
+func (s *server) Run() {
 	r := mux.NewRouter().StrictSlash(true)
 
 	// HTTP handlers
@@ -61,6 +66,6 @@ func (s *Server) Run() {
 	}
 
 	// Listen server on port 8080
-	log.Printf("Starting tornote server on %s", s.Host)
-	log.Fatal(http.ListenAndServe(s.Host, r))
+	log.Printf("Starting tornote server on %s", s.host)
+	log.Fatal(http.ListenAndServe(s.host, r))
 }
