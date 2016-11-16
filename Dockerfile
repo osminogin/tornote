@@ -1,4 +1,4 @@
-FROM golang:1.6
+FROM golang:latest
 MAINTAINER Vladimir Osintsev <oc@co.ru>
 
 RUN mkdir -p /go/src/app
