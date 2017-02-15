@@ -4,6 +4,8 @@ GOTOOLS = github.com/mattn/goveralls golang.org/x/tools/cmd/cover github.com/jte
 
 default: tests
 
+build: default
+
 tests: format
 	@echo "--> Running tests"
 	@go tool vet .
