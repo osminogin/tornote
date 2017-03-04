@@ -4,7 +4,7 @@ Anonymous self-destructing notes written in Go and with help Stanford Javascript
 
 Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
 
-Latest stable version available on https://tornote.xyz
+Latest stable version available on https://tornote.org
 
 ## Security
 
