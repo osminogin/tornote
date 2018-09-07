@@ -5,9 +5,9 @@ go:
   - 1.6
   - tip
 before_install:
-  - npm install -g bower
+  - npm install -g yarn
 install:
-  - bower install
+  - yarn install
   - make deps
 script:
   - make tests
