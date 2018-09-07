@@ -6,3 +6,5 @@ db.sqlite3
 
 public/vendor/
 bindata.go
+
+node_modules
