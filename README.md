@@ -47,4 +47,4 @@ However my new plan now includes:
 + Migrate from Bower to Yarn
 + Move away from any 'latest' declaration
 
-All credits to the original author: thank you [Vladimir Osintsev](https://github.com/osminogin) for sharing!
+All credits to the original author, thank you [Vladimir Osintsev](https://github.com/osminogin) for sharing!
