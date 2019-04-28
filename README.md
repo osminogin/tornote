@@ -39,14 +39,15 @@ AGPLv3 or later
 
 ----
 
-# Repo notice
+### Repo notice
 
 I originally forked the repo to easily update and maintain the Dockerfile.
 
-However my new plan now includes:
+However my new plan now involves:
 
 + Replace Debian Stretch with  **golang:1.12.4-alpine3.9** to reduce the image size
 + Migrate from Bower to Yarn
 + Move away from any 'latest' declaration
++ PR and hopefully merge my changes
 
 All credits to the original author, thank you [Vladimir Osintsev](https://github.com/osminogin) for sharing!
