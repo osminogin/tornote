@@ -37,6 +37,8 @@ $ docker run -p 80:8080 --name tornote tornote-app
 
 AGPLv3 or later
 
+----
+
 # Repo notice
 
 I originally forked the repo to easily update and maintain the Dockerfile.
