@@ -41,7 +41,7 @@ AGPLv3 or later
 
 ### Repo notice
 
-I originally forked the repo to easily update and maintain the Dockerfile.
+I originally forked the repo to be able to easily update and maintain the Dockerfile.
 
 However my new plan now involves:
 
