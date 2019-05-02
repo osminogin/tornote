@@ -1,30 +1,18 @@
 # Tornote [![Build Status](https://travis-ci.org/cig0/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/cig0/tornote/badge.svg?branch=master)](https://coveralls.io/github/cig0/tornote?branch=master)
 
-Anonymous self-destructing notes written in Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
+Anonymous self-destructing notes written in Go with help of Stanford JavaScript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
 
-Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.
+The server stores only encrypted data. JavaScript must be enabled, because notes are decrypted in the web browser using the key from the secret link. After reading the encrypted note, it is immediately removed from the database.
 
 ## Security
 
-How safe Tornote compared with other similar services? More than.
+How safe Tornote is compared with other similar services? More than many of them.
 
-+ All private data in the clear text is not leaving the client-side (without encryption).
++ All private data in clear text doesn't leave the client-side without being encrypted first.
++ Server stores only anonymous encrypted data, without any reference to it's author or reader.
++ Note decryption is executed on the client-side via the SJCL. After reading the encrypted note, it's data is removed from the server.
 
-+ Server stored only anonymous encrypted data (without any reference to author or reader).
-
-+ Note decryption executed on the client-side via the SJCL. After reading the encrypted data removed on server.
-
-If you have ideas to improve the our safety/security so far as possible please post the issue.
-
-## Getting started
-
-```bash
-$ go get -u github.com/osminogin/tornote
-$ cd $GOPATH/src/github.com/osminogin/tornote
-$ bower install
-$ make install
-$ tornote &
-```
+If you have ideas to improve safety/security please open a new issue.
 
 ## Running with Docker
 
@@ -39,15 +27,29 @@ AGPLv3 or later
 
 ----
 
+### TO DO (in no particular order)
+
+```diff
++ [ DONE ] Move away from any 'latest' declaration for packages versions
++ [ DONE ] Migrate from golang:1.12.4-stretch to a smaller base | Update: with the new base image being debian:buster-20190326-slim and additional cleaning steps implemented, the size of the new image is now about 64% smaller than the original one
++ [ CANCELLED ] Replace Debian with Alpine Linux to reduce even further the image size | Update: not worth the time and effort as the gain is marginal
++ [ DONE ] Migrate from Bower to Yarn
++ [ DONE ] Tornote is now running as a limited user (instead of as root) for enhanced security
+- Add branding like shown in the mockup
+- Fix badges
+```
+
 ### Repo notice
 
-I originally forked the repo to be able to easily update and maintain the Dockerfile.
+#### Branches description
 
-However my new plan now involves:
++ **master**: production-ready branch. This is the branch that should be pulled when running this app in production.
++ **dev**: development branch. All work branches have to be merged here for testing prior to merging them into master.
 
-+ Replace Debian Stretch with  **golang:1.12.4-alpine3.9** to reduce the image size
-+ Migrate from Bower to Yarn
-+ Move away from any 'latest' declaration
-+ PR and hopefully merge my changes
+Should this project grow in the future, it would be wise to adopt a more robust branching model.
+
+### Contributing
+
+Just push your stuff to a proper branch and open a PR to dev.
 
 All credits to the original author, thank you [Vladimir Osintsev](https://github.com/osminogin) for sharing!

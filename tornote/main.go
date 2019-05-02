@@ -22,7 +22,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cig0/tornote"
+	"gitlab-art.globallogic.com.ar/martin.cigorraga/tornote"
 )
 
 var (

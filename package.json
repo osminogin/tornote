@@ -1,0 +1,13 @@
+{
+  "name": "tornote",
+  "version": "0.2.2",
+  "description": "Anonymous self-destructing notes written in Go",
+  "main": "public/main.js",
+  "repository": "git@gitlab-art.globallogic.com.ar:martin.cigorraga/tornote.git",
+  "author": "Martín Cigorraga <martin.cigorraga@globallogic.com>",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "jquery": "^3.0.0",
+    "sjcl": "^1.0.3"
+  }
+}
