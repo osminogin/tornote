@@ -1,8 +1,6 @@
-.idea/
-
 npm-debug.log
 coverage.out
-db.sqlite3
-
-public/vendor/
-bindata.go
+.vscode
+README.html
+.DS_Store
+*~

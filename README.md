@@ -1,32 +1,22 @@
-# Tornote [![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/osminogin/tornote/badge.svg?branch=master)](https://coveralls.io/github/osminogin/tornote?branch=master)
+# Tornote
 
-Anonymous self-destructing notes written in Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
+![Screenshot](resources/screenshot.png)
 
-Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
+[![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/cig0/tornote/badge.svg?branch=master)](https://coveralls.io/github/cig0/tornote?branch=master)
 
-Latest stable version available on https://tornote.org
+Anonymous self-destructing notes written in Go with help of Stanford JavaScript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
+
+The server stores only encrypted data. JavaScript must be enabled, because notes are decrypted in the web browser using the key from the secret link. After reading the encrypted note, it is immediately removed from the database.
 
 ## Security
 
-How safe Tornote compared with other similar services? More than.
+How safe Tornote is compared with other similar services? More than many of them.
 
-- All private data in the clear text is not leaving the client-side (without encryption).
++ All private data in clear text doesn't leave the client-side without being encrypted first
++ Server stores only anonymous encrypted data, without any reference to it's author or reader
++ Note decryption is executed on the client-side via the SJCL. After reading the encrypted note, it's data is removed from the server
 
-- Server stored only anonymous encrypted data (without any reference to author or reader).
-
-- Note decryption executed on the client-side via the SJCL. After reading the encrypted data removed on server.
-
-If you have ideas to improve the our safety/security so far as possible please post the issue.
-
-## Getting started
-
-```bash
-$ go get -u github.com/osminogin/tornote
-$ cd $GOPATH/src/github.com/osminogin/tornote
-$ bower install
-$ make install
-$ tornote &
-```
+If you have ideas to improve safety/security please open a new issue.
 
 ## Running with Docker
 
@@ -38,3 +28,31 @@ $ docker run -p 80:8080 --name tornote tornote-app
 ## License
 
 AGPLv3 or later
+
+----
+
+### TO DO (in no particular order)
+
+```diff
++ [ DONE ] Move away from any 'latest' declaration for packages versions
++ [ DONE ] Migrate from golang:1.12.4-stretch to a smaller base
++ [ DONE ] Added package.json for future migration from Bower to Yarn
++ [ DONE ] Tornote is now running as a limited user (instead of as root) for enhanced security
++ [ DONE ] Create a multi-stage Dockerfile
+- Migrate from Bower to Yarn
+- Fix testing & badges
+```
+
+### Repo notice
+
+#### Branches description
+
++ **master**: production-ready branch; this is the branch that should be pulled when running this app in production
++ **stage**: a.k.a. release branch
++ **dev**: development branch; all work branches have to be merged here
+
+#### How to contribute
+
+Fork the repo and PR against `dev` branch.
+
+All credits goes to the original author, thank you [Vladimir Osintsev](https://github.com/osminogin) for sharing!

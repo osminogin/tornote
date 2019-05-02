@@ -22,7 +22,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/osminogin/tornote"
+	"github.com/cig0/tornote"
 )
 
 var (

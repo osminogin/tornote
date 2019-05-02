@@ -1,31 +1,43 @@
-FROM golang:latest
-MAINTAINER Vladimir Osintsev <oc@co.ru>
+ARG GOLANG_VER=1.12.4-stretch
+ARG ALPINE_VER=3.9.3
 
-RUN mkdir -p /go/src/app
-WORKDIR /go/src/app
+## Stage 0: build Go executable from code and templates
+FROM golang:${GOLANG_VER} as builder
 
 COPY . /go/src/app
+WORKDIR /go/src/app
 
-RUN apt-get update && apt-get -y install --no-install-recommends \
-        sqlite3 \
-        nodejs-legacy \
-        npm && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# https://nodesource.com/blog/installing-node-js-tutorial-debian-linux/
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get -y install --no-install-recommends nodejs && \
+    npm install -g bower && \
+    bower --allow-root install && \
+    mkdir -p /go/src/github.com/cig0 && \
+    ln -sf /go/src/app /go/src/github.com/cig0/tornote
 
-# Client-side dependencies
-RUN npm install -g bower && \
-    bower --allow-root install
-
-RUN mkdir -p /go/src/github.com/osminogin && \
-    ln -sf /go/src/app /go/src/github.com/osminogin/tornote
-
-# Database init with schema
-RUN sqlite3 db.sqlite3 <db.scheme
-
-VOLUME /go/src/app/db.sqlite3
+VOLUME /go/src/app/
 
 RUN make install
+
+## Stage 1: grab compiled binary
+FROM alpine:${ALPINE_VER} as runtime
+
+COPY --from=builder /go/bin /go/bin
+COPY db.schema /go/src/app/
+
+WORKDIR /go/src/app
+ENV PATH="/go/bin:${PATH}"
+
+RUN apk add --update sqlite && \
+    sqlite3 db.sqlite3 < db.schema && \
+    adduser -D limited -s /bin/sh && \
+    chown -R limited.limited /go && \
+    mkdir /lib64 && \
+    ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+
+VOLUME /go/src/app/
+
+USER limited
 
 EXPOSE 8080
 
