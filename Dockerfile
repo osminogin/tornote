@@ -15,8 +15,6 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
     mkdir -p /go/src/github.com/cig0 && \
     ln -sf /go/src/app /go/src/github.com/cig0/tornote
 
-VOLUME /go/src/app/
-
 RUN make install
 
 ## Stage 1: grab compiled binary
@@ -34,8 +32,6 @@ RUN apk add --update sqlite && \
     chown -R limited.limited /go && \
     mkdir /lib64 && \
     ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-
-VOLUME /go/src/app/
 
 USER limited
 
