@@ -1,5 +1,5 @@
 ARG GOLANG_VER=1.12.4-stretch
-ARG ALPINE_VER=3.9.3
+ARG ALPINE_VER=3.9.4
 
 ## Stage 0: build Go executable from code and templates
 FROM golang:${GOLANG_VER} as builder
