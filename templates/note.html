@@ -1,9 +1,9 @@
-{{ define "title" }}Anonymous Self-destructing Notes{{ end }}
+{{ define "title" }}Anonymous self-destructing notes{{ end }}
 
 {{ define "content" }}
 <div class="form-group">
     <label for="secret_note">
-        This note permanently deleted after reading
+        Beware! The note on the server has already been destroyed! You won't be able to access this data anymore!
         <span class="glyphicon glyphicon-fire"></span>:
     </label>
     <pre id="secret_note" class="hidden">{{.}}</pre>
