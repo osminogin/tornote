@@ -4,7 +4,7 @@
 <!-- Warning -->
 <noscript>
     <div id="warn" class="alert alert-danger" role="alert">
-        <strong>Warning!</strong> You must enable JavaScript because all encryption going inside web browser.
+        <strong>Warning!</strong> You must enable JavaScript since encryption happens inside your web browser.
     </div>
 </noscript>
 
@@ -13,7 +13,7 @@
     <form id="note" action="/note" method="post">
         <div class="form-group">
             <label for="note">
-                Write your note below
+                Write your secure note below
                 <span class="glyphicon glyphicon-edit small"></span>:
             </label>
             <textarea class="form-control" name="body" cols="80" rows="12"></textarea>
@@ -21,7 +21,7 @@
                 Text will be encrypted with
                 <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES-256</a>
                 <span class="glyphicon glyphicon-lock small"></span>
-                algorithm and secret (generated on client-side).
+                algorithm and a secret generated on client-side.
             </p>
         </div>
         <div class="form-group text-center">
@@ -36,7 +36,7 @@
 <!-- Secret link -->
 <div id="done" class="hidden">
     <div class="form-group">
-        <label for="secret_link">Your secret message available on the link:</label>
+        <label for="secret_link">Your secret message is available at:</label>
         <pre id="secret_link"></pre>
     </div>
     <div class="form-group text-center">
