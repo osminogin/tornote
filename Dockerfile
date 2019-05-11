@@ -37,4 +37,4 @@ USER limited
 
 EXPOSE 8080
 
-CMD ["tornote", "-addr", ":8080"]
+ENTRYPOINT ["tornote", "-addr", ":8080"]
