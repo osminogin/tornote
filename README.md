@@ -21,7 +21,7 @@ If you have ideas to improve safety/security please open a new issue.
 ## Running with Docker
 
 ```bash
-$ docker build -t tornote .
+$ docker build --no-cache -t tornote .
 $ docker run --name tornote -p 80:8080/tcp --memory 10m --memory-reservation 8m --cpus 0.10 tornote
 ```
 
