@@ -1,4 +1,4 @@
-// Copyright 2016 Vladimir Osintsev <osintsev@gmail.com>
+// Copyright 2016-2020 Vladimir Osintsev <osintsev@gmail.com>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -46,8 +46,6 @@ func (s *server) OpenDB(path string) (err error) {
 	if err = s.DB.Ping(); err != nil {
 		return err
 	}
-
-	return nil
 }
 
 // Running daemon process.
