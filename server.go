@@ -41,11 +41,11 @@ func (s *server) OpenDB(path string) (err error) {
 	if s.DB, err = sql.Open("sqlite3", path); err != nil {
 		return err
 	}
-
 	// Ping DB connection
 	if err = s.DB.Ping(); err != nil {
 		return err
 	}
+	return
 }
 
 // Running daemon process.

@@ -24,8 +24,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // See the COPYING file in the main directory for details.
 
-//package main
-//
 //import (
 //	"flag"
 //	"fmt"
@@ -37,13 +35,7 @@
 //	sw "github.com/osminogin/tornote/go"
 //)
 //
-//var (
-//	address = flag.String("addr", ":8000", "The address and port to listen")
-//	db      = flag.String("db", "./db.sqlite3", "Path to sqlite3 database")
-//	version = flag.Bool("version", false, "Print server version")
-//)
 //
-//var GitCommit string
 //
 //func main() {
 //	log.Printf("Tornote server runned on ")
@@ -57,7 +49,19 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"log"
+	"os"
+
 	"github.com/osminogin/tornote"
+)
+
+var GitCommit string
+
+var (
+	address  = flag.String("addr", ":8000", "The address and port to listen")
+	database = flag.String("database", "./database.sqlite3", "Path to sqlite3 database")
+	version  = flag.Bool("version", false, "Print server version")
 )
 
 func main() {
@@ -71,7 +75,7 @@ func main() {
 	server := tornote.NewServer(*address)
 
 	// Connecting to database
-	if err := server.OpenDB(*db); err != nil {
+	if err := server.OpenDB(*database); err != nil {
 		log.Fatal(err)
 	}
 	defer server.DB.Close()

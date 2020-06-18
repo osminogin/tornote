@@ -43,6 +43,7 @@ func initTemplates() (err error) {
 			return err
 		}
 	}
+	return
 }
 
 // Wrapper around template.ExecuteTemplate method.

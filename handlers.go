@@ -21,8 +21,8 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"net/http"
-	"path/filepath"
 
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
@@ -35,21 +35,25 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 
 // publicFileHandler get file from bindata or return not found error.
 func publicFileHandler(w http.ResponseWriter, r *http.Request) {
-	data, err := Asset(r.URL.Path[1:])
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
+	uri := r.URL.Path[1:]
+	log.Print(uri)
+	http.ServeFile(w, r, uri)
+
+	//data, err := Asset()
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusNotFound)
+	//	return
+	//}
 
 	// Set headers by file extension
-	switch filepath.Ext(r.URL.Path[1:]) {
-	case ".js":
-		w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-	case ".css":
-		w.Header().Set("Content-Type", "text/css")
-	}
-
-	w.Write(data)
+	//switch filepath.Ext(r.URL.Path[1:]) {
+	//case ".js":
+	//	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	//case ".css":
+	//	w.Header().Set("Content-Type", "text/css")
+	//}
+	//
+	//w.Write(data)
 }
 
 // readNoteHandler print encrypted data for client-side decrypt and destroy note.
