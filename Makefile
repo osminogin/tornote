@@ -2,11 +2,11 @@ GITCOMMIT = $(shell git rev-parse --short HEAD)
 GOLDFLAGS = "-X main.GitCommit=$(GITCOMMIT)"
 GOTOOLS = github.com/mattn/goveralls golang.org/x/tools/cmd/cover github.com/jteeuwen/go-bindata/...
 
-default: tests
+default: test
 
 build: default
 
-tests: format
+test:
 	@echo "--> Running tests"
 	@go tool vet .
 	@go test -v ./...

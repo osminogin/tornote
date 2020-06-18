@@ -1,22 +1,24 @@
-name: Builds
-
 on:
   push:
     branches: [ master, release-latest ]
   pull_request:
     branches: [ master, release-latest ]
 
+name: Builds
+
 jobs:
   build:
     name: Go Build
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.13.x, 1.14.x]
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
     steps:
-      - name: Set up Go 1.14
+      - name: Setup Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.14
+          go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v2
-      - name: Go make action
-        uses: ouzi-dev/go-make-action@v1.4.0
-        with:
-          target: build
+#      - run: go build -ldflags $(GOLDFLAGS) ./...
+      - run: go build ./...
