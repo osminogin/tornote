@@ -1,0 +1,22 @@
+name: Builds
+
+on:
+  push:
+    branches: [ master, release-latest ]
+  pull_request:
+    branches: [ master, release-latest ]
+
+jobs:
+  build:
+    name: Go Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.14
+      - uses: actions/checkout@v2
+      - name: Go make action
+        uses: ouzi-dev/go-make-action@v1.4.0
+        with:
+          target: build
