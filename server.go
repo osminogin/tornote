@@ -83,4 +83,5 @@ func (s *server) Run() error {
 	// Listen server on specified port
 	log.Printf("Starting server on :%s", s.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), r))
+	return nil
 }
