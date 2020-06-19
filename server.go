@@ -18,6 +18,7 @@ package tornote
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -26,44 +27,60 @@ import (
 )
 
 type server struct {
-	DB   *sql.DB
-	host string
+	// Listen port
+	Port uint64
+	// Secret used for encryption/decription
 	Key  string
+	// Data source name
+	DSN string
+	// Database connection
+	db   *sql.DB
+}
+
+type Server interface {
+	Run() error
 }
 
 // Constructor for new server.
-func NewServer(address string) *server {
-	return &server{host: address}
+func NewServer(port uint64, dbPath string) *server {
+	return &server{Port: port, DSN: dbPath}
 }
 
 // Open and check database connection.
-func (s *server) OpenDB(path string) (err error) {
-	if s.DB, err = sql.Open("sqlite3", path); err != nil {
+func (s *server) ConnectDB() (err error) {
+	if s.db, err = sql.Open("sqlite3", s.DSN); err != nil {
 		return err
 	}
+
 	// Ping DB connection
-	if err = s.DB.Ping(); err != nil {
+	if err = s.db.Ping(); err != nil {
 		return err
 	}
-	return
+	return nil
 }
 
 // Running daemon process.
-func (s *server) Run() {
+func (s *server) Run() error {
 	r := mux.NewRouter().StrictSlash(true)
 
 	// HTTP handlers
 	r.HandleFunc("/", frontPageHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
-	r.Handle("/note", saveNoteHandler(s.DB)).Methods("POST")
-	r.Handle("/{id}", readNoteHandler(s.DB)).Methods("GET")
+	r.Handle("/note", saveNoteHandler(s.db)).Methods("POST")
+	r.Handle("/{id}", readNoteHandler(s.db)).Methods("GET")
 
 	// Prebuild templates
 	if err := initTemplates(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	// Listen server on port 8080
-	log.Printf("Starting tornote server on %s", s.host)
-	log.Fatal(http.ListenAndServe(s.host, r))
+	// Connecting to database
+	if err := s.ConnectDB(); err != nil {
+		return err
+	}
+	defer s.db.Close()
+
+	// Listen server on specified port
+	log.Printf("Starting server on :%s", s.Port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), r))
 }
