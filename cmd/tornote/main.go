@@ -25,20 +25,12 @@
 // See the COPYING file in the main directory for details.
 
 //import (
-//	"flag"
-//	"fmt"
-//	"github.com/osminogin/tornote"
-//	"log"
-//	"os"
-//	"net/http"
 //
 //	sw "github.com/osminogin/tornote/go"
 //)
 //
 //
-//
 //func main() {
-//	log.Printf("Tornote server runned on ")
 //
 //	router := sw.NewRouter()
 //
@@ -48,38 +40,35 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/osminogin/tornote"
+	"github.com/spf13/viper"
 )
 
-var GitCommit string
-
 var (
-	address  = flag.String("addr", ":8000", "The address and port to listen")
-	database = flag.String("database", "./database.sqlite3", "Path to sqlite3 database")
-	version  = flag.Bool("version", false, "Print server version")
+	GitCommit string
 )
 
 func main() {
-	flag.Parse()
+	// Configuration settings.
+	v := viper.New()
 
-	if *version {
-		fmt.Printf("Version: git%s\n", GitCommit)
-		os.Exit(0)
-	}
+	v.SetDefault("PORT", 8000)
+	v.SetDefault("DATABASE", "./database.sqlite3")	// TODO: Connect by DSN
+	v.SetDefault("VERSION", GitCommit)
 
-	server := tornote.NewServer(*address)
+	v.SetConfigName("")
+	v.SetConfigType("env")
+	_ = v.ReadInConfig()
 
-	// Connecting to database
-	if err := server.OpenDB(*database); err != nil {
-		log.Fatal(err)
-	}
-	defer server.DB.Close()
+	v.SetConfigName(".env")
+	v.SetConfigType("dotenv")
+	v.AddConfigPath(".")
+	v.AutomaticEnv()
 
-	// Starting
-	server.Run()
+	// Server init and run.
+	var s tornote.Server
+	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE"))
+	log.Fatal(s.Run())
 }
