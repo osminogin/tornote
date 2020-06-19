@@ -1,16 +1,16 @@
-# Tornote [![Build Status](https://travis-ci.org/osminogin/tornote.svg?branch=master)](https://travis-ci.org/osminogin/tornote) [![Coverage Status](https://coveralls.io/repos/github/osminogin/tornote/badge.svg?branch=master)](https://coveralls.io/github/osminogin/tornote?branch=master)
+# Tornote 
 
-Anonymous self-destructing notes written in Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
+![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=release-latest) ![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=release-latest)
+
+Anonymous self-destructing notes written on Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
 
 Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
 
 Latest stable version available on https://tornote.org
 
-## Security
+## Security aspects
 
-How safe Tornote compared with other similar services? More than.
-
-- All private data in the clear text is not leaving the client-side (without encryption).
+- All private data and secrets not leaving the client-side without encryption (no any plain text transfered).
 
 - Server stored only anonymous encrypted data (without any reference to author or reader).
 
@@ -21,11 +21,11 @@ If you have ideas to improve the our safety/security so far as possible please p
 ## Getting started
 
 ```bash
-$ go get -u github.com/osminogin/tornote
-$ cd $GOPATH/src/github.com/osminogin/tornote
-$ bower install
-$ make install
-$ tornote &
+git clone github.com/osminogin/tornote
+cd tornote
+go build ./...
+
+./bin/tornote
 ```
 
 ## Running with Docker
