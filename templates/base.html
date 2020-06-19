@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Anonymous self-destructing notes written in Go.">
+    <meta name="description" content="Self-destructing notes service.">
     <meta name="author" content="">
 
     <title>Tornote - {{ template "title" . }}</title>
@@ -14,8 +14,6 @@
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
           crossorigin="anonymous">
     <link rel="stylesheet" href="/public/styles.css">
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -23,7 +21,7 @@
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/">tornote<span class="text-muted">.org</span></a>
+                <a class="navbar-brand" href="/">tornote<span class="text-muted">herokuapp.com</span></a>
             </div>
         </div>
     </nav>
@@ -44,10 +42,13 @@
         </div>
     </footer>
 
-    <script> // Local fallback for jQuery library served with CDN
-        if (!window.jQuery) { document.write('<script src="/public/vendor/jquery/dist/jquery.slim.min.js"><\/script>'); }
-    </script>
-    <script src="/public/vendor/sjcl/sjcl.js"></script>
+    <!-- User scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.8/sjcl.min.js"
+            integrity="sha256-nIoG9XIePM1QNttI6KAGLYGNxc4DNinxxmOZW0/Z7uA="
+            crossorigin="anonymous"></script>
     <script src="/public/main.js"></script>
 </body>
 </html>

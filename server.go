@@ -81,7 +81,7 @@ func (s *server) Run() error {
 	defer s.db.Close()
 
 	// Listen server on specified port
-	log.Printf("Starting server on :%s", s.Port)
+	log.Printf("Starting server on :%d", s.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), r))
 	return nil
 }
