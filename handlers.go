@@ -17,15 +17,12 @@
 package tornote
 
 import (
-	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"github.com/google/uuid"
-	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/go-pg/pg/v10"
 )
 
 // frontPageHandler render home page.
@@ -36,79 +33,54 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 // publicFileHandler get file from bindata or return not found error.
 func publicFileHandler(w http.ResponseWriter, r *http.Request) {
 	uri := r.URL.Path[1:]
-	log.Print(uri)
 	http.ServeFile(w, r, uri)
-
-	//data, err := Asset()
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusNotFound)
-	//	return
-	//}
-
-	// Set headers by file extension
-	//switch filepath.Ext(r.URL.Path[1:]) {
-	//case ".js":
-	//	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-	//case ".css":
-	//	w.Header().Set("Content-Type", "text/css")
-	//}
-	//
-	//w.Write(data)
 }
 
 // readNoteHandler print encrypted data for client-side decrypt and destroy note.
-func readNoteHandler(db *pg.DB) http.Handler {
+func readNoteHandler(s *server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-
-		// Valid UUID required.
-		id, err := uuid.Parse(vars["id"])
-		if err != nil {
-			http.Error(w, "", http.StatusBadRequest)
-			return
-		}
-
-		note := &Note{ID: id}
-
-		// Get encrypted note or return 404
-		err = db.Select(note)
+		raw, _ := base64.RawURLEncoding.DecodeString(vars["id"])
+		id, err := uuid.FromBytes(raw)
 		if err != nil {
 			http.NotFound(w, r)
 			return
 		}
-		// Deferred note deletion
+
+		n := &Note{UUID: id}
+
+		// Get encrypted n or return 404
+		err = s.db.Select(n)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		// Deferred n deletion
 		defer func() {
-			db.Delete(note)
+			s.db.Delete(n)
 		}()
 
-		// Print encrypted note to user
-		renderTemplate(w, "note.html", note.Data)
+		// Print encrypted n to user
+		renderTemplate(w, "note.html", string(n.Data))
 	})
 }
 
-// saveNoteHandler save secret note to persistent datastore and return note ID.
-func saveNoteHandler(db *pg.DB) http.Handler {
+// createNoteHandler save secret note to persistent datastore and return note ID.
+func createNoteHandler(s *server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		encrypted := r.FormValue("body")
-		secret := make([]byte, 11)
-
-		// Generate random data for note id
-		_, err := rand.Read(secret)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		n := &Note{
+			UUID: uuid.New(),
+			Data: []byte(r.FormValue("body")),
 		}
 
-		// Encode note id with URL safe format
-		id := base64.RawURLEncoding.EncodeToString(secret)
-
-		// Save data to database
-		_, err = db.Exec("INSERT INTO notes (id, encrypted) VALUES (?, ?)", id, encrypted)
+		err := s.db.Insert(n)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		fmt.Fprint(w, id)
+		b, _ := n.UUID.MarshalBinary()
+		marshalled := base64.RawURLEncoding.EncodeToString(b)
+		fmt.Fprint(w, marshalled)
 	})
 }

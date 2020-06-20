@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS notes(
-    id TEXT PRIMARY KEY NOT NULL,
-    encrypted TEXT NOT NULL
-);

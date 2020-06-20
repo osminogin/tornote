@@ -2,13 +2,12 @@ package tornote
 
 import (
 	"fmt"
-
 	"github.com/google/uuid"
 )
 
 type Note struct {
-	ID	uuid.UUID	`json:"-" sql:",type:uuid"`
-	Data []byte		`json:"data"`
+	UUID uuid.UUID `json:"-" pg:",pk,type:uuid"`
+	Data []byte    `json:"data"`
 }
 
 type Encrypter interface {
@@ -20,5 +19,5 @@ type Decrypter interface {
 }
 
 func (u *Note) String() string {
-	return fmt.Sprintf("%v", u.ID)
+	return fmt.Sprintf("%v %d bytes", u.UUID, len(u.Data))
 }

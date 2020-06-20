@@ -53,18 +53,14 @@ var (
 func main() {
 	// Configuration settings.
 	v := viper.New()
-
 	v.SetDefault("PORT", 8000)
-	v.SetDefault("DATABASE_URL", "psql://postgres:postgres@localhost/postgres")
+	v.SetDefault("DATABASE_URL", "postgres://postgres:postgres@localhost/postgres")
 	v.SetDefault("VERSION", GitCommit)
-
-	v.SetConfigName("")
-	v.SetConfigType("env")
-	_ = v.ReadInConfig()
 
 	v.SetConfigName(".env")
 	v.SetConfigType("dotenv")
 	v.AddConfigPath(".")
+	v.ReadInConfig()
 	v.AutomaticEnv()
 
 	// Server init and run.

@@ -6,7 +6,7 @@ $(document).ready(function() {
     $("#note").submit(function(event) {
         var form = $(this);
         var text = form.find("textarea").val();
-        var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(3));
+        var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(5));
         var encrypted = sjcl.encrypt(secret, text);
 
         $.ajax({

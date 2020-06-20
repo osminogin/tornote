@@ -18,9 +18,34 @@ package tornote
 
 import (
 	"errors"
+	"html/template"
 	"net/http"
+	"strings"
 )
 
+var Templates map[string]*template.Template
+
+
+// Compiles templates from templates/ dir into global map.
+func compileTemplates() (err error) {
+	if Templates == nil {
+		Templates = make(map[string]*template.Template)
+	}
+	// XXX:
+	layout := "templates/base.html"
+	pages := []string{
+		"templates/index.html",
+		"templates/note.html",
+	}
+	for _, file := range pages {
+		baseName := strings.TrimLeft(file, "templates/")
+		Templates[baseName], err = template.New("").ParseFiles(file, layout)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 // Wrapper around template.ExecuteTemplate method.
 func renderTemplate(w http.ResponseWriter, name string, data interface{}) error {

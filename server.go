@@ -20,17 +20,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"html/template"
-	"strings"
 
-	"github.com/gorilla/mux"
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/gorilla/mux"
 )
-
-// XXX: Move inside server struct.
-var Templates map[string]*template.Template
 
 type server struct {
 	// Listen port
@@ -64,10 +58,10 @@ func (s *server) connectDB() error {
 	}
 	s.db = pg.Connect(opt)
 
-	// Ping postgres connection
-	if err = s.db.Ping(nil); err != nil {
-		return err
-	}
+	// XXX: Ping postgres connection
+	//if err = s.db.Ping(); err != nil {
+	//	return err
+	//}
 	return nil
 }
 
@@ -82,36 +76,16 @@ func (s *server) createSchema() error {
 	return nil
 }
 
-// Compiles templates from templates/ dir into global map.
-func compileTemplates() (err error) {
-	if Templates == nil {
-		Templates = make(map[string]*template.Template)
-	}
-	// XXX:
-	layout := "templates/base.html"
-	pages := []string{
-		"templates/index.html",
-		"templates/note.html",
-	}
-	for _, file := range pages {
-		baseName := strings.TrimLeft(file, "templates/")
-		Templates[baseName], err = template.New("").ParseFiles(file, layout)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // Running daemon process.
 func (s *server) Run() error {
 	r := mux.NewRouter().StrictSlash(true)
 
 	// HTTP handlers
 	r.HandleFunc("/", frontPageHandler).Methods("GET")
+	//r.PathPrefix("/favicon.ico").HandlerFunc(publicFileHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
-	r.Handle("/note", saveNoteHandler(s.db)).Methods("POST")
-	r.Handle("/{id}", readNoteHandler(s.db)).Methods("GET")
+	r.Handle("/note", createNoteHandler(s)).Methods("POST")
+	r.Handle("/{id}", readNoteHandler(s)).Methods("GET")
 
 	// Connecting to database
 	if err := s.connectDB(); err != nil {
