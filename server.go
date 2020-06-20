@@ -17,14 +17,20 @@
 package tornote
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
+	"html/template"
+	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+// XXX: Move inside server struct.
+var Templates map[string]*template.Template
 
 type server struct {
 	// Listen port
@@ -33,8 +39,8 @@ type server struct {
 	Key  string
 	// Data source name
 	DSN string
-	// Database connection
-	db   *sql.DB
+	// PostgreSQL connection
+	db   *pg.DB
 }
 
 type Server interface {
@@ -42,19 +48,57 @@ type Server interface {
 }
 
 // Constructor for new server.
-func NewServer(port uint64, dbPath string) *server {
-	return &server{Port: port, DSN: dbPath}
+func NewServer(port uint64, dsn string) *server {
+	_, err := pg.ParseURL(dsn)
+	if err != nil {
+		panic(err)
+	}
+	return &server{Port: port, DSN: dsn}
 }
 
 // Open and check database connection.
-func (s *server) ConnectDB() (err error) {
-	if s.db, err = sql.Open("sqlite3", s.DSN); err != nil {
+func (s *server) connectDB() error {
+	opt, err := pg.ParseURL(s.DSN)
+	if err != nil {
 		return err
 	}
+	s.db = pg.Connect(opt)
 
-	// Ping DB connection
-	if err = s.db.Ping(); err != nil {
+	// Ping postgres connection
+	if err = s.db.Ping(nil); err != nil {
 		return err
+	}
+	return nil
+}
+
+// Creates database tables for notes if not exists.
+func (s *server) createSchema() error {
+	err := s.db.CreateTable(&Note{}, &orm.CreateTableOptions{
+		IfNotExists: true,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Compiles templates from templates/ dir into global map.
+func compileTemplates() (err error) {
+	if Templates == nil {
+		Templates = make(map[string]*template.Template)
+	}
+	// XXX:
+	layout := "templates/base.html"
+	pages := []string{
+		"templates/index.html",
+		"templates/note.html",
+	}
+	for _, file := range pages {
+		baseName := strings.TrimLeft(file, "templates/")
+		Templates[baseName], err = template.New("").ParseFiles(file, layout)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -69,16 +113,21 @@ func (s *server) Run() error {
 	r.Handle("/note", saveNoteHandler(s.db)).Methods("POST")
 	r.Handle("/{id}", readNoteHandler(s.db)).Methods("GET")
 
-	// Prebuild templates
-	if err := initTemplates(); err != nil {
-		return err
-	}
-
 	// Connecting to database
-	if err := s.ConnectDB(); err != nil {
+	if err := s.connectDB(); err != nil {
 		return err
 	}
 	defer s.db.Close()
+
+	// Bootstrap database if not exists
+	if err := s.createSchema(); err != nil {
+		return err
+	}
+
+	// Pre-compile templates
+	if err := compileTemplates(); err != nil {
+		return err
+	}
 
 	// Listen server on specified port
 	log.Printf("Starting server on :%d", s.Port)

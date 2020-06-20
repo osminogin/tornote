@@ -55,7 +55,7 @@ func main() {
 	v := viper.New()
 
 	v.SetDefault("PORT", 8000)
-	v.SetDefault("DATABASE", "./database.sqlite3")	// TODO: Connect by DSN
+	v.SetDefault("DATABASE_URL", "psql://postgres:postgres@localhost/postgres")
 	v.SetDefault("VERSION", GitCommit)
 
 	v.SetConfigName("")
@@ -69,6 +69,6 @@ func main() {
 
 	// Server init and run.
 	var s tornote.Server
-	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE"))
+	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE_URL"))
 	log.Fatal(s.Run())
 }

@@ -18,14 +18,14 @@ package tornote
 
 import (
 	"crypto/rand"
-	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/go-pg/pg/v10"
 )
 
 // frontPageHandler render home page.
@@ -57,30 +57,37 @@ func publicFileHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // readNoteHandler print encrypted data for client-side decrypt and destroy note.
-func readNoteHandler(db *sql.DB) http.Handler {
+func readNoteHandler(db *pg.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var encrypted string
 		vars := mux.Vars(r)
 
-		// Get encrypted note or return error
-		err := db.QueryRow("SELECT encrypted FROM notes WHERE id = ?", vars["id"]).Scan(&encrypted)
+		// Valid UUID required.
+		id, err := uuid.Parse(vars["id"])
+		if err != nil {
+			http.Error(w, "", http.StatusBadRequest)
+			return
+		}
+
+		note := &Note{ID: id}
+
+		// Get encrypted note or return 404
+		err = db.Select(note)
 		if err != nil {
 			http.NotFound(w, r)
 			return
 		}
-
-		// Deferred destroy note
+		// Deferred note deletion
 		defer func() {
-			db.Exec("DELETE FROM notes WHERE id = ?", vars["id"])
+			db.Delete(note)
 		}()
 
 		// Print encrypted note to user
-		renderTemplate(w, "note.html", encrypted)
+		renderTemplate(w, "note.html", note.Data)
 	})
 }
 
 // saveNoteHandler save secret note to persistent datastore and return note ID.
-func saveNoteHandler(db *sql.DB) http.Handler {
+func saveNoteHandler(db *pg.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		encrypted := r.FormValue("body")
 		secret := make([]byte, 11)
