@@ -20,11 +20,6 @@ RUN npm install -g bower && \
 RUN mkdir -p /go/src/github.com/osminogin && \
     ln -sf /go/src/app /go/src/github.com/osminogin/tornote
 
-# Database init with schema
-RUN sqlite3 db.sqlite3 <db.scheme
-
-VOLUME /go/src/app/db.sqlite3
-
 RUN make install
 
 EXPOSE 8080

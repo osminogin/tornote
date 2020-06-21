@@ -2,9 +2,8 @@
 
 {{ define "content" }}
 <div class="form-group">
-    <label for="secret_note">
-        This note permanently deleted after reading
-        <span class="glyphicon glyphicon-fire text-danger"></span>:
+    <label for="secret_note text-danger">
+        This note permanently deleted <span class="glyphicon glyphicon-fire text-danger"></span>:
     </label>
     <pre id="secret_note" class="hidden">{{.}}</pre>
 </div>
