@@ -18,17 +18,22 @@ If you have ideas to improve the our safety/security so far as possible please p
 
 ## Getting started
 
+Build and run locally:
+
 ```bash
 go install github.com/osminogin/tornote/...
 tornote
 ```
 
+Or use Docker:
+
 ```bash
+git clone https://github.com/osminogin/tornote
 docker build -t tornote .
 docker run -p 8000:8000 tornote
 ```
 
-## Fast deployments
+## Fast deployment
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
