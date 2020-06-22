@@ -1,10 +1,8 @@
 # Tornote 
 
-![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=release-latest) ![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=release-latest)
+[![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ABuilds) [![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ATests) [![License: Apache](https://img.shields.io/badge/License-Apache-black.svg)](https://raw.githubusercontent.com/osminogin/tornote/master/LICENSE)
 
-Anonymous self-destructing notes written on Go and with help Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) on client-side.
-
-Server stores only encrypted data. JavaScript must be enabled, because notes decripted in the Web Browser with key from secret link. After reading encrypted note immediately removed from the database.    
+Self-destructing notes written on Go with Stanford Javascript Crypto Library ([SJCL](https://crypto.stanford.edu/sjcl/)) for client-side encryption/decryption.
 
 Latest stable version deployed on [https://tornote.herokuapp.com/](https://tornote.herokuapp.com/)
 
@@ -12,7 +10,7 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 
 - All private data and secrets not leaving the client-side without encryption (no any plain text transfered).
 
-- Server stored only anonymous encrypted data (without any reference to author or reader).
+- Server stored only anonymous encrypted data (without any reference to author or reader) and immediately removed after reading.
 
 - Note decryption executed on the client-side via the SJCL. After reading the encrypted data removed on server.
 
@@ -37,4 +35,4 @@ $ docker run -p 80:8080 --name tornote tornote-app
 
 ## License
 
-AGPLv3 or later
+See [LICENSE](https://raw.githubusercontent.com/osminogin/tornote/master/LICENSE)
