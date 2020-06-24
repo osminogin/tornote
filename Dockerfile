@@ -1,27 +1,12 @@
-FROM golang:latest
-MAINTAINER Vladimir Osintsev <oc@co.ru>
+FROM golang:alpine as BUILD
+MAINTAINER Vladimir Osintsev <osintsev@gmail.com>
 
-RUN mkdir -p /go/src/app
 WORKDIR /go/src/app
+COPY . .
+RUN go install -v ./...
 
-COPY . /go/src/app
+FROM alpine
+COPY --from=BUILD /go/bin/tornote /usr/bin/tornote
+EXPOSE 8000
 
-RUN apt-get update && apt-get -y install --no-install-recommends \
-        sqlite3 \
-        nodejs-legacy \
-        npm && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Client-side dependencies
-RUN npm install -g bower && \
-    bower --allow-root install
-
-RUN mkdir -p /go/src/github.com/osminogin && \
-    ln -sf /go/src/app /go/src/github.com/osminogin/tornote
-
-RUN make install
-
-EXPOSE 8080
-
-CMD ["tornote", "-addr", ":8080"]
+CMD ["tornote"]
