@@ -17,14 +17,13 @@
 package tornote
 
 import (
-	"errors"
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 )
 
 var Templates map[string]*template.Template
-
 
 // Compiles templates from templates/ dir into global map.
 func compileTemplates() (err error) {
@@ -48,15 +47,19 @@ func compileTemplates() (err error) {
 }
 
 // Wrapper around template.ExecuteTemplate method.
-func renderTemplate(w http.ResponseWriter, name string, data interface{}) error {
+func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	// XXX: data is context may be...
 	tmpl, ok := Templates[name]
 	if !ok {
-		return errors.New(name + "template file doesn't exists")
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Fatalf("%s template file doesn't exists", name)
+		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	tmpl.ExecuteTemplate(w, "base", data)
-
-	return nil
+	err := tmpl.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

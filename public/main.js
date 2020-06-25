@@ -18,10 +18,10 @@ $(document).ready(function() {
 
     // Submit new secret note
     $("#note").submit(function(event) {
-        var form = $(this);
-        var text = form.find("textarea").val();
-        var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(5));
-        var encrypted = sjcl.encrypt(secret, text);
+        let form = $(this);
+        let text = form.find("textarea").val();
+        let secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(5));
+        let encrypted = sjcl.encrypt(secret, text);
         let csrfToken = document.getElementsByName("csrf_token")[0].value;
 
         $.ajax({
@@ -30,7 +30,7 @@ $(document).ready(function() {
             data: {body: encrypted.toString()},
             headers: {"X-CSRF-Token": csrfToken},
             success: function(id) {
-                var link = window.location.href.toString() + id + "#" + secret;
+                let link = window.location.href.toString() + id + "#" + secret;
                 $("#secret_link").text(link);
                 $("a", "#done").first().attr("href", link);
                 $("#note").addClass("hidden");
@@ -43,18 +43,17 @@ $(document).ready(function() {
 
     // Show decrypted secret note
     if($("#secret_note").length > 0){
-        var secret = window.location.hash.substring(1);
-        var ciphertext = $("#secret_note").text();
-        var decrypted = sjcl.decrypt(secret, ciphertext);
+        let secret = window.location.hash.substring(1);
+        let cipherText = $("#secret_note").text();
+        let decrypted = sjcl.decrypt(secret, cipherText);
         $("#secret_note").html(decrypted);
         $("#secret_note").removeClass("hidden");
-    };
-
+    }
 });
 
 // Soluiton from https://stackoverflow.com/questions/985272/
 function SelectText(element) {
-    var doc = document,
+    let doc = document,
         text = doc.getElementById(element),
         range,
         selection;

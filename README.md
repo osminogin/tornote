@@ -8,7 +8,7 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 
 ## Security aspects
 
-- AES-256 encryption used with 27 bytes secret key (randomly generated on client).
+- [AES-256](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encryption used with 27 bytes secret key (randomly generated on client).
 
 - All private data including secret not leaving a web-browser without encryption.
 

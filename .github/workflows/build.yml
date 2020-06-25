@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [ master, release-latest ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, release-latest ]
+    branches: [ master ]
 
 name: Builds
 

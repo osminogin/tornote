@@ -13,7 +13,7 @@ func TestFrontPage(t *testing.T) {
 	r := mux.NewRouter()
 
 	req, _ := http.NewRequest("GET", "/", nil)
-	r.HandleFunc("/", frontPageHandler).Methods("GET")
+	r.HandleFunc("/", mainFormHandler).Methods("GET")
 	r.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
