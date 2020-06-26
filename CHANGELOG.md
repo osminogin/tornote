@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- CSRF protection for main form [@osminogin](https://github.com/osminogin)
+- CSRF protection for main form.
+- Health check for Docker.
 
 ### Changed
-- Licensed under Apache License 2.0 [@osminogin](https://github.com/osminogin)
+- Licensed under Apache License 2.0

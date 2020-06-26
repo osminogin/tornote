@@ -39,6 +39,12 @@ func publicFileHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, uri)
 }
 
+// Return status for health checks.
+func healthStatusHandler(w http.ResponseWriter, r *http.Request) {
+	// TODO: Ping database connection
+	w.WriteHeader(http.StatusOK)
+}
+
 // readNoteHandler print encrypted data for client-side decrypt and destroy note.
 func readNoteHandler(s *server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

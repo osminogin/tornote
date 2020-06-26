@@ -31,8 +31,6 @@ import (
 type server struct {
 	// Listen port
 	Port uint64
-	// Secret used for encryption/decription
-	Key string
 	// Data source name
 	DSN string
 	// PostgreSQL connection
@@ -99,7 +97,7 @@ func (s *server) Run() error {
 
 	// HTTP handlers
 	r.HandleFunc("/", mainFormHandler).Methods("GET")
-	//r.PathPrefix("/favicon.ico").HandlerFunc(publicFileHandler).Methods("GET")
+	r.HandleFunc("/healthz", healthStatusHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
 	r.Handle("/note", createNoteHandler(s)).Methods("POST")
 	r.Handle("/{id}", readNoteHandler(s)).Methods("GET")
