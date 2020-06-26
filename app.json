@@ -1,0 +1,7 @@
+{
+  "name": "Tornote",
+  "description": "Self-destructing notes written on Go",
+  "repository": "https://github.com/osminogin/tornote",
+  "keywords": ["go", "golang"],
+  "addons": ["heroku-postgresql:hobby-dev"]
+}
