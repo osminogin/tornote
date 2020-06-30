@@ -89,9 +89,6 @@ func CreateNoteHandler(s *server) http.Handler {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-
-		b, _ := n.UUID.MarshalBinary()
-		marshalled := base64.RawURLEncoding.EncodeToString(b)
-		fmt.Fprint(w, marshalled)
+		fmt.Fprint(w, n.String())
 	})
 }

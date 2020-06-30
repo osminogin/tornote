@@ -1,7 +1,7 @@
 package tornote
 
 import (
-	"fmt"
+	"encoding/base64"
 	"github.com/google/uuid"
 )
 
@@ -10,14 +10,10 @@ type Note struct {
 	Data []byte    `json:"data"`
 }
 
-type Encrypter interface {
-	Encrypt(msg []byte, secret string) (data []byte, err error)
-}
-
-type Decrypter interface {
-	Decrypt(data []byte, secret string) (msg []byte, err error)
-}
-
-func (u *Note) String() string {
-	return fmt.Sprintf("%v %d bytes", u.UUID, len(u.Data))
+func (n *Note) String() string {
+	b, err := n.UUID.MarshalBinary()
+	if err != nil {
+		return ""
+	}
+	return base64.RawURLEncoding.EncodeToString(b)
 }
