@@ -6,6 +6,7 @@ COPY . .
 RUN go install -v ./...
 
 FROM alpine
+COPY --from=build /go/src/app/templates /templates
 COPY --from=build /go/bin/tornote /usr/bin/tornote
 
 RUN apk add --no-cache curl
