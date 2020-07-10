@@ -7,6 +7,7 @@ RUN go install -v ./...
 
 FROM alpine
 COPY --from=build /go/src/app/templates /templates
+COPY --from=build /go/src/app/public /public
 COPY --from=build /go/bin/tornote /usr/bin/tornote
 
 ENV DATABASE_URL=postgres://postgres:postgres@postgres/postgres
