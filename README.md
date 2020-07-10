@@ -6,6 +6,10 @@ Self-destructing notes written on Go with Stanford Javascript Crypto Library for
 
 Latest stable version deployed on [https://tornote.herokuapp.com/](https://tornote.herokuapp.com/)
 
+## Settings
+
+``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
+
 ## Security aspects
 
 - [AES-256](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encryption used with 27 bytes secret key (randomly generated on client).
@@ -27,12 +31,12 @@ go install github.com/osminogin/tornote/...
 tornote
 ```
 
-Or use Docker:
+Or with Docker:
 
 ```bash
 git clone https://github.com/osminogin/tornote
 docker build -t tornote .
-docker run -p 8000:8000 tornote
+docker run -p 8000:8000 -e DATABASE_URL=... tornote
 ```
 
 Or just deploy it to cloud:
