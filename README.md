@@ -9,6 +9,7 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 ## Settings
 
 ``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
+``SECRET_KEY`` - Server secret used for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection.
 
 ## Security aspects
 
@@ -36,7 +37,7 @@ Or with Docker:
 ```bash
 git clone https://github.com/osminogin/tornote
 docker build -t tornote .
-docker run -p 8000:8000 -e DATABASE_URL=... tornote
+docker run -p 8000:8000 -e DATABASE_URL=... -e SECRET_KEY=... tornote
 ```
 
 Or just deploy it to cloud:

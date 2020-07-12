@@ -65,7 +65,7 @@ func main() {
 
 	// Server init and run.
 	var s tornote.Server
-	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE_URL"))
+	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE_URL"), v.GetString("SECRET_KEY"))
 	s.Init()
 	log.Fatal(s.Listen())
 }
