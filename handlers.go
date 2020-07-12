@@ -89,6 +89,7 @@ func CreateNoteHandler(s *server) http.Handler {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		w.WriteHeader(http.StatusCreated)
 		fmt.Fprint(w, n.String())
 	})
 }
