@@ -44,6 +44,7 @@ func main() {
 	// Configuration settings.
 	v := viper.New()
 	v.SetDefault("PORT", 8000)
+	v.SetDefault("PRODUCTION", false)
 	v.SetDefault("DATABASE_URL", "postgres://postgres:postgres@localhost/postgres")
 	v.SetDefault("VERSION", GitCommit)
 
@@ -55,7 +56,12 @@ func main() {
 
 	// Server init and run.
 	var s tornote.Server
-	s = tornote.NewServer(v.GetUint64("PORT"), v.GetString("DATABASE_URL"), v.GetString("SECRET_KEY"))
+	s = tornote.NewServer(
+		v.GetUint64("PORT"),
+		v.GetString("DATABASE_URL"),
+		v.GetString("SECRET_KEY"),
+		v.GetBool("PRODUCTION"),
+	)
 	s.Init()
 	log.Fatal(s.Listen())
 }

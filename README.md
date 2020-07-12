@@ -12,6 +12,9 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 
 ``SECRET_KEY`` - Server secret used for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection.
 
+``PRODUCTION`` - Production mode use more strict settings. Disabled by default, but by definition it must be enabled on publicly available deployments.
+
+
 ## Security aspects
 
 - [AES-256](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encryption used with 27 bytes secret key (randomly generated on client).
