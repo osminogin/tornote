@@ -27,7 +27,12 @@ $(document).ready(function() {
         $.ajax({
             url: form.attr("action"),
             method: "POST",
-            data: {body: encrypted.toString()},
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                body: encrypted.toString(),
+            },
             headers: {"X-CSRF-Token": csrfToken},
             success: function(id) {
                 let link = window.location.href.toString() + id + "#" + secret;
@@ -36,6 +41,9 @@ $(document).ready(function() {
                 $("#note").addClass("hidden");
                 $("#done").removeClass("hidden");
                 SelectText("secret_link");
+            },
+            error: function (err) {
+                window.alert(err.responseText);
             }
         });
         event.preventDefault();
