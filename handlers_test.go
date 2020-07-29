@@ -17,10 +17,14 @@
 package tornote
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
+
+const TestRandomString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func TestMainFormHandler(t *testing.T) {
 	w := httptest.NewRecorder()
@@ -44,5 +48,25 @@ func TestHealthStatusHandler(t *testing.T) {
 
 	if w.Code != http.StatusOK {
 		t.Errorf("return code %d instead %d", w.Code, http.StatusOK)
+	}
+}
+
+func TestCreateNoteHandler(t *testing.T) {
+	w := httptest.NewRecorder()
+	s := stubServer()
+
+	// First request page and set CSRF protected cookie on request
+	req1, _ := http.NewRequest("GET", "/", nil)
+	s.router.ServeHTTP(w, req1)
+
+	data := url.Values{}
+	data.Set("body", TestRandomString)
+
+	req2, _ := http.NewRequest("POST", "/note", bytes.NewBufferString(data.Encode()))
+	req2.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+	s.router.ServeHTTP(w, req2)
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("return code %d instead %d", w.Code, http.StatusCreated)
 	}
 }
