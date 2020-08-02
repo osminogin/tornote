@@ -49,6 +49,13 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    // Copy to buffer
+    $("a.btn-primary").click(function(event) {
+        // TODO: Show feedback to user
+        document.execCommand('copy');
+        event.preventDefault();
+    });
+
     // Show decrypted secret note
     if($("#secret_note").length > 0){
         let secret = window.location.hash.substring(1);
