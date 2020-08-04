@@ -26,27 +26,29 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// mainFormHandler renders main form.
-func mainFormHandler(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "index.html", map[string]interface{}{
-		csrf.TemplateTag: csrf.TemplateField(r),
+// MainFormHandler renders main form.
+func MainFormHandler(s *server) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		s.renderTemplate(w, "index.html", map[string]interface{}{
+			csrf.TemplateTag: csrf.TemplateField(r),
+		})
 	})
 }
 
-// publicFileHandler get file from bindata or return not found error.
-func publicFileHandler(w http.ResponseWriter, r *http.Request) {
+// PublicFileHandler get file from bindata or return not found error.
+func PublicFileHandler(w http.ResponseWriter, r *http.Request) {
 	uri := r.URL.Path[1:]
 	http.ServeFile(w, r, uri)
 }
 
 // Return status for health checks.
-func healthStatusHandler(w http.ResponseWriter, r *http.Request) {
+func HealthStatusHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: Ping database connection
 	w.WriteHeader(http.StatusOK)
 }
 
-// readNoteHandler print encrypted data for client-side decrypt and destroy note.
-func readNoteHandler(s *server) http.Handler {
+// ReadNoteHandler print encrypted data for client-side decrypt and destroy note.
+func ReadNoteHandler(s *server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		raw, _ := base64.RawURLEncoding.DecodeString(vars["id"])
@@ -70,12 +72,12 @@ func readNoteHandler(s *server) http.Handler {
 		}()
 
 		// Print encrypted n to user
-		renderTemplate(w, "note.html", string(n.Data))
+		s.renderTemplate(w, "note.html", string(n.Data))
 	})
 }
 
-// createNoteHandler save secret note to persistent datastore and return note ID.
-func createNoteHandler(s *server) http.Handler {
+// CreateNoteHandler save secret note to persistent datastore and return note ID.
+func CreateNoteHandler(s *server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		n := &Note{
 			UUID: uuid.New(),
