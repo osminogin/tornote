@@ -22,11 +22,13 @@ $(document).ready(function() {
         var text = form.find("textarea").val();
         var secret = sjcl.codec.base64url.fromBits(sjcl.random.randomWords(5));
         var encrypted = sjcl.encrypt(secret, text);
+        let csrfToken = document.getElementsByName("csrf_token")[0].value;
 
         $.ajax({
             url: form.attr("action"),
             method: "POST",
             data: {body: encrypted.toString()},
+            headers: {"X-CSRF-Token": csrfToken},
             success: function(id) {
                 var link = window.location.href.toString() + id + "#" + secret;
                 $("#secret_link").text(link);

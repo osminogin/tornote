@@ -8,9 +8,10 @@
     </div>
 </noscript>
 
-<!-- Submit form -->
+<!-- Main form -->
 <div id="main" class="hidden">
     <form id="note" action="/note" method="post">
+        {{ .csrfField }}
         <div class="form-group">
             <label for="note">
                 Write your note below

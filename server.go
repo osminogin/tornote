@@ -17,12 +17,14 @@
 package tornote
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 )
 
@@ -30,11 +32,11 @@ type server struct {
 	// Listen port
 	Port uint64
 	// Secret used for encryption/decription
-	Key  string
+	Key string
 	// Data source name
 	DSN string
 	// PostgreSQL connection
-	db   *pg.DB
+	db *pg.DB
 }
 
 type Server interface {
@@ -76,12 +78,27 @@ func (s *server) createSchema() error {
 	return nil
 }
 
-// Running daemon process.
+// Generate hash from server secret key.
+func (s *server) getSecretHash() []byte {
+	h := sha256.New()
+	h.Write([]byte("hello world\n"))
+	return h.Sum(nil)
+}
+
+// Running server.
 func (s *server) Run() error {
 	r := mux.NewRouter().StrictSlash(true)
 
+	// Setup middlewares
+	csrfMiddleware := csrf.Protect(
+		s.getSecretHash(),
+		csrf.FieldName("csrf_token"),
+		csrf.SameSite(csrf.SameSiteStrictMode),
+	)
+	r.Use(csrfMiddleware)
+
 	// HTTP handlers
-	r.HandleFunc("/", frontPageHandler).Methods("GET")
+	r.HandleFunc("/", mainFormHandler).Methods("GET")
 	//r.PathPrefix("/favicon.ico").HandlerFunc(publicFileHandler).Methods("GET")
 	r.PathPrefix("/public/").HandlerFunc(publicFileHandler).Methods("GET")
 	r.Handle("/note", createNoteHandler(s)).Methods("POST")

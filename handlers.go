@@ -22,12 +22,15 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 )
 
-// frontPageHandler render home page.
-func frontPageHandler(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, "index.html", nil)
+// mainFormHandler renders main form.
+func mainFormHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, "index.html", map[string]interface{}{
+		csrf.TemplateTag: csrf.TemplateField(r),
+	})
 }
 
 // publicFileHandler get file from bindata or return not found error.
