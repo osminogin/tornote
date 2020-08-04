@@ -1,6 +1,6 @@
 # Tornote 
 
-[![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ABuilds) [![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ATests) [![Docker Image](https://github.com/osminogin/tornote/workflows/Docker/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ADocker) [![Go Doc](https://godoc.org/github.com/osminogin/tornote?status.svg)](http://godoc.org/github.com/osminogin/tornote) [![License: Apache](https://img.shields.io/badge/License-Apache-black.svg)](https://raw.githubusercontent.com/osminogin/tornote/master/LICENSE)
+[![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ABuilds) [![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ATests) [![Docker Image](https://github.com/osminogin/tornote/workflows/Docker/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ADocker) [![Go Doc](https://godoc.org/github.com/osminogin/tornote?status.svg)](http://godoc.org/github.com/osminogin/tornote) [![License: Apache](https://img.shields.io/badge/License-AGPLv3-black.svg)](https://raw.githubusercontent.com/osminogin/tornote/master/COPYING)
 
 Self-destructing notes written on Go with Stanford Javascript Crypto Library for client-side encryption/decryption.
 
@@ -9,6 +9,7 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 ## Settings
 
 ``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
+
 ``SECRET_KEY`` - Server secret used for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection.
 
 ## Security aspects
@@ -51,4 +52,4 @@ Or just deploy it to cloud:
 
 ## License
 
-See [LICENSE](https://raw.githubusercontent.com/osminogin/tornote/master/LICENSE)
+See [COPYING](https://raw.githubusercontent.com/osminogin/tornote/master/COPYING)

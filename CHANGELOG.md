@@ -10,6 +10,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSRF protection for main form.
 - Health check for Docker.
 - Heroku application manifest.
-
-### Changed
-- Licensed under Apache License 2.0
