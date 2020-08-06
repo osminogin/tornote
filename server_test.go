@@ -23,16 +23,16 @@ const (
 	TestSecret = "0123456789"
 )
 
-func stubServer() *server {
-	s := NewServer(TestPort, TestDSN, TestSecret)
-	s.Init()
-	return s
+func stubServer() *Server {
+	srv := NewServer(TestPort, TestDSN, TestSecret, ServerOpts{})
+	srv.Init()
+	return srv
 }
 
 //func TestNewServer(t *testing.T) {
 //	s := stubServer()
 //	if s.DSN != TestDSN && s.Port != TestPort {
-//		t.Fatal("can not initialize server")
+//		t.Fatal("can not initialize Server")
 //	}
 //}
 //

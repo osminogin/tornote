@@ -28,7 +28,7 @@ import (
 )
 
 // MainFormHandler renders main form.
-func MainFormHandler(s *server) http.Handler {
+func MainFormHandler(s *Server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.renderTemplate(w, "index.html", map[string]interface{}{
 			csrf.TemplateTag: csrf.TemplateField(r),
@@ -49,7 +49,7 @@ func HealthStatusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // ReadNoteHandler print encrypted data for client-side decrypt and destroy note.
-func ReadNoteHandler(s *server) http.Handler {
+func ReadNoteHandler(s *Server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		raw, _ := base64.RawURLEncoding.DecodeString(vars["id"])
@@ -78,7 +78,7 @@ func ReadNoteHandler(s *server) http.Handler {
 }
 
 // CreateNoteHandler save secret note to persistent datastore and return note ID.
-func CreateNoteHandler(s *server) http.Handler {
+func CreateNoteHandler(s *Server) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		n := &Note{
 			UUID: uuid.New(),

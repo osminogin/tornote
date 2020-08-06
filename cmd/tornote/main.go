@@ -42,27 +42,32 @@ var (
 )
 
 func main() {
-	// Configuration settings.
+	// Set default settings
 	v := viper.New()
 	v.SetDefault("PORT", 8000)
-	v.SetDefault("PRODUCTION", false)
 	v.SetDefault("DATABASE_URL", "postgres://postgres:postgres@localhost/postgres")
+	v.SetDefault("HTTPS_ONLY", false)
 	v.SetDefault("VERSION", GitCommit)
 
+	// Read configuration file and environment
 	v.SetConfigName(".env")
 	v.SetConfigType("dotenv")
 	v.AddConfigPath(".")
 	v.ReadInConfig()
 	v.AutomaticEnv()
 
-	// Server init and run.
-	var s tornote.Server
-	s = tornote.NewServer(
+	// Server initialization and start
+	var srv *tornote.Server
+	var opts tornote.ServerOpts
+
+	opts.HTTPSOnly = v.GetBool("HTTPS_ONLY")
+
+	srv = tornote.NewServer(
 		v.GetUint64("PORT"),
 		v.GetString("DATABASE_URL"),
 		v.GetString("SECRET_KEY"),
-		v.GetBool("PRODUCTION"),
+		opts,
 	)
-	s.Init()
-	log.Fatal(s.Listen())
+	srv.Init()
+	log.Fatal(srv.Listen())
 }

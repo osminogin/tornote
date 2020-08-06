@@ -31,11 +31,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type server struct {
+type Server struct {
 	// Listen port
 	Port uint64
 	// Data source name
 	DSN string
+	// Server options
+	Opts ServerOpts
 	// PostgreSQL connection
 	db *pg.DB
 	// Server secret key
@@ -44,26 +46,23 @@ type server struct {
 	router *mux.Router
 	// Compiled templates
 	templates map[string]*template.Template
-	// Production mode
-	isProduction bool
 }
 
-type Server interface {
-	Init()
-	Listen() error
+type ServerOpts struct {
+	HTTPSOnly bool
 }
 
-// Constructor for new server.
-func NewServer(port uint64, dsn string, secret string, prod bool) *server {
+// Constructor for new Server.
+func NewServer(port uint64, dsn string, secret string, opts ServerOpts) *Server {
 	_, err := pg.ParseURL(dsn)
 	if err != nil {
 		panic(err)
 	}
-	return &server{Port: port, DSN: dsn, secret: secret, isProduction: prod}
+	return &Server{Port: port, DSN: dsn, secret: secret, Opts: opts}
 }
 
 // Open and check database connection.
-func (s *server) connectDB() error {
+func (s *Server) connectDB() error {
 	opt, err := pg.ParseURL(s.DSN)
 	if err != nil {
 		return err
@@ -78,7 +77,7 @@ func (s *server) connectDB() error {
 }
 
 // Creates database tables for notes if not exists.
-func (s *server) createSchema() error {
+func (s *Server) createSchema() error {
 	err := s.db.CreateTable(&Note{}, &orm.CreateTableOptions{
 		IfNotExists: true,
 	})
@@ -89,14 +88,14 @@ func (s *server) createSchema() error {
 }
 
 // Generates a hash with a static length suitable for CSRF middleware.
-func (s *server) genHashFromSecret() []byte {
+func (s *Server) genHashFromSecret() []byte {
 	h := sha256.New()
 	h.Write([]byte(s.secret))
 	return h.Sum(nil)
 }
 
 // Compiles templates from templates/ dir into global map.
-func (s *server) compileTemplates() (err error) {
+func (s *Server) compileTemplates() (err error) {
 	if s.templates == nil {
 		s.templates = make(map[string]*template.Template)
 	}
@@ -117,7 +116,7 @@ func (s *server) compileTemplates() (err error) {
 }
 
 // Wrapper around template.ExecuteTemplate method.
-func (s *server) renderTemplate(w http.ResponseWriter, name string, data interface{}) {
+func (s *Server) renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	// XXX: data is context may be...
 	tmpl, ok := s.templates[name]
 	if !ok {
@@ -135,18 +134,17 @@ func (s *server) renderTemplate(w http.ResponseWriter, name string, data interfa
 }
 
 // Initialize server.
-func (s *server) Init() {
+func (s *Server) Init() {
 	s.router = mux.NewRouter().StrictSlash(true)
 
 	// Setup middlewares
 	csrfMiddleware := csrf.Protect(
 		s.genHashFromSecret(),
 		csrf.FieldName("csrf_token"),
-		// More strict defaults used in production mode
-		csrf.Secure(s.isProduction),
+		csrf.Secure(s.Opts.HTTPSOnly),
 	)
 	s.router.Use(csrfMiddleware)
-	if s.isProduction {
+	if s.Opts.HTTPSOnly {
 		s.router.Use(RedirectToHTTPSMiddleware)
 	}
 
@@ -164,7 +162,7 @@ func (s *server) Init() {
 }
 
 // Listen server on specified port with opened database connection.
-func (s *server) Listen() error {
+func (s *Server) Listen() error {
 	// Connecting to database
 	if err := s.connectDB(); err != nil {
 		return err
@@ -176,9 +174,9 @@ func (s *server) Listen() error {
 		return err
 	}
 
-	// Running server.
-	if s.isProduction {
-		log.Println("Production mode enabled")
+	// Start the server
+	if s.Opts.HTTPSOnly {
+		log.Println("HTTPS only traffic allowed")
 	}
 	log.Printf("Starting server on :%d", s.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.router))
