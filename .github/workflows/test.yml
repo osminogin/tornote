@@ -10,6 +10,8 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -17,9 +19,8 @@ jobs:
           --health-retries 5
     strategy:
       matrix:
-        go-version: [1.14.x]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.platform }}
+        go-version: [1.13.x, 1.14.x]
+    runs-on: ubuntu-latest
     steps:
       - name: Setup Go
         uses: actions/setup-go@v1
@@ -30,7 +31,3 @@ jobs:
       - run: git branch
       - run: cat handlers.go
       - run: go test -v ./...
-        env:
-          DATABASE_URL: postgres://postgres:postgres@postgres/postgres
-          SECRET_KEY: 4tests0nly
-          HTTPS_ONLY: False

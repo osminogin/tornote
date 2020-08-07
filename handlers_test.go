@@ -18,6 +18,7 @@ package tornote
 
 import (
 	"bytes"
+	"golang.org/x/net/html"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -25,6 +26,47 @@ import (
 )
 
 const TestRandomString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func requestMainForm(s *Server) (w *httptest.ResponseRecorder) {
+	w = httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+	s.router.ServeHTTP(w, req)
+	return
+}
+
+func getCSRFToken(body *bytes.Buffer) (token string) {
+	root, err := html.Parse(body)
+	if err != nil {
+		return ""
+	}
+	if n, ok := getElementByName("csrf_token", root); ok {
+		token = getAttributeByKey("value", n)
+	}
+	return
+}
+
+func getElementByName(name string, n *html.Node) (el *html.Node, ok bool) {
+	for _, a := range n.Attr {
+		if a.Key == "name" && a.Val == name {
+			return n, true
+		}
+	}
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if el, ok = getElementByName(name, c); ok {
+			return
+		}
+	}
+	return
+}
+
+func getAttributeByKey(key string, n *html.Node) string {
+	for _, attr := range n.Attr {
+		if attr.Key == key {
+			return attr.Val
+		}
+	}
+	return ""
+}
 
 func TestMainFormHandler(t *testing.T) {
 	w := httptest.NewRecorder()
@@ -52,19 +94,19 @@ func TestHealthStatusHandler(t *testing.T) {
 }
 
 func TestCreateNoteHandler(t *testing.T) {
-	w := httptest.NewRecorder()
-	s := stubServer()
-
-	// First request page and set CSRF protected cookie on request
-	req1, _ := http.NewRequest("GET", "/", nil)
-	s.router.ServeHTTP(w, req1)
+	srv := stubServer()
+	w := requestMainForm(srv)
 
 	data := url.Values{}
+	cookies := w.Result().Cookies()
 	data.Set("body", TestRandomString)
+	data.Set("csrf_token", getCSRFToken(w.Body))
 
-	req2, _ := http.NewRequest("POST", "/note", bytes.NewBufferString(data.Encode()))
-	req2.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-	s.router.ServeHTTP(w, req2)
+	w = httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/note", bytes.NewBufferString(data.Encode()))
+	req.AddCookie(cookies[0])
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+	srv.router.ServeHTTP(w, req)
 
 	if w.Code != http.StatusCreated {
 		t.Errorf("return code %d instead %d", w.Code, http.StatusCreated)

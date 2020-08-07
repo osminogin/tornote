@@ -18,23 +18,24 @@
 package tornote
 
 const (
-	TestDSN    = "postgres://postgres:postgres@localhost/testdb"
+	TestDSN    = "postgres://postgres:postgres@localhost/postgres?sslmode=disable"
 	TestPort   = 31337
-	TestSecret = "0123456789"
+	TestSecret = "4tests0nly"
 )
 
 func stubServer() *Server {
-	srv := NewServer(ServerOpts{})
+	o := testServerOpts()
+	srv := NewServer(o)
 	srv.Init()
 	return srv
 }
 
 func testServerOpts() ServerOpts {
 	return ServerOpts{
-		Port:      8000,
-		DSN:       "postgres://postgres:postgres@postgres/postgres",
+		Port:      TestPort,
+		DSN:       TestDSN,
+		Secret:    TestSecret,
 		HTTPSOnly: false,
-		Secret:    "4tests0nly",
 	}
 }
 

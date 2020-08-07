@@ -160,20 +160,21 @@ func (s *Server) Init() {
 	if err := s.compileTemplates(); err != nil {
 		panic(err)
 	}
+
+	// Connecting to database
+	if err := s.connectDB(); err != nil {
+		panic(err)
+	}
+
+	// Bootstrap tables if not exists
+	if err := s.createSchema(); err != nil {
+		panic(err)
+	}
 }
 
 // Listen server on specified port with opened database connection.
 func (s *Server) Listen() error {
-	// Connecting to database
-	if err := s.connectDB(); err != nil {
-		return err
-	}
 	defer s.db.Close()
-
-	// Bootstrap database if not exists
-	if err := s.createSchema(); err != nil {
-		return err
-	}
 
 	// Start the server
 	if s.opts.HTTPSOnly {
