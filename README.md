@@ -2,18 +2,9 @@
 
 [![Build Status](https://github.com/osminogin/tornote/workflows/Builds/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ABuilds) [![Test Status](https://github.com/osminogin/tornote/workflows/Tests/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ATests) [![Docker Image](https://github.com/osminogin/tornote/workflows/Docker/badge.svg?branch=master)](https://github.com/osminogin/tornote/actions?query=workflow%3ADocker) [![Go Doc](https://godoc.org/github.com/osminogin/tornote?status.svg)](http://godoc.org/github.com/osminogin/tornote) [![License: Apache](https://img.shields.io/badge/License-AGPLv3-black.svg)](https://raw.githubusercontent.com/osminogin/tornote/master/COPYING)
 
-Self-destructing notes written on Go with Stanford Javascript Crypto Library for client-side encryption/decryption.
+Self-destructing notes written on Go with Stanford JS Crypto Library for client-side encryption/decryption.
 
 Latest stable version deployed on [https://tornote.herokuapp.com/](https://tornote.herokuapp.com/)
-
-## Settings
-
-``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
-
-``SECRET_KEY`` - Server secret used for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection.
-
-``PRODUCTION`` - Production mode use more strict settings. Disabled by default, but by definition it must be enabled on publicly available deployments.
-
 
 ## Security aspects
 
@@ -27,26 +18,29 @@ Latest stable version deployed on [https://tornote.herokuapp.com/](https://torno
 
 If you have ideas to improve the our safety/security so far as possible please post the issue.
 
+## Settings
+
+Configuration settings can be set with `.env` file or environment.
+
+``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
+
+``SECRET_KEY`` - Server secret used for [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery) protection.
+
+``HTTPS_ONLY`` - HTTPS only traffic allowed (disabled by default).
+
 ## Getting started
 
-Build and run locally:
+Deploy to Heroku cloud:
 
-```bash
-go install github.com/osminogin/tornote/...
-tornote
-```
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/osminogin/tornote)
 
-Or with Docker:
+Or build and run locally:
 
 ```bash
 git clone https://github.com/osminogin/tornote
 docker build -t tornote .
 docker run -p 8000:8000 -e DATABASE_URL=... -e SECRET_KEY=... tornote
 ```
-
-Or just deploy it to cloud:
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/osminogin/tornote)
 
 
 ## ChangeLog
