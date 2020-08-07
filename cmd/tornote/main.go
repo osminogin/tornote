@@ -15,19 +15,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-//import (
-//
-//	sw "github.com/osminogin/tornote/go"
-//)
-//
-//
-//func main() {
-//
-//	router := sw.NewRouter()
-//
-//	log.Fatal(http.ListenAndServe(":8080", router))
-//}
-
 package main
 
 import (
@@ -42,6 +29,9 @@ var (
 )
 
 func main() {
+	var srv *tornote.Server
+	var opts tornote.ServerOpts
+
 	// Set default settings
 	v := viper.New()
 	v.SetDefault("PORT", 8000)
@@ -57,17 +47,12 @@ func main() {
 	v.AutomaticEnv()
 
 	// Server initialization and start
-	var srv *tornote.Server
-	var opts tornote.ServerOpts
-
+	opts.Port = v.GetUint64("PORT")
+	opts.DSN = v.GetString("DATABASE_URL")
+	opts.Secret = v.GetString("SECRET_KEY")
 	opts.HTTPSOnly = v.GetBool("HTTPS_ONLY")
 
-	srv = tornote.NewServer(
-		v.GetUint64("PORT"),
-		v.GetString("DATABASE_URL"),
-		v.GetString("SECRET_KEY"),
-		opts,
-	)
+	srv = tornote.NewServer(opts)
 	srv.Init()
 	log.Fatal(srv.Listen())
 }

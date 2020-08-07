@@ -32,16 +32,10 @@ import (
 )
 
 type Server struct {
-	// Listen port
-	Port uint64
-	// Data source name
-	DSN string
 	// Server options
-	Opts ServerOpts
+	opts ServerOpts
 	// PostgreSQL connection
 	db *pg.DB
-	// Server secret key
-	secret string
 	// Mux router
 	router *mux.Router
 	// Compiled templates
@@ -49,25 +43,32 @@ type Server struct {
 }
 
 type ServerOpts struct {
+	// Listen port
+	Port uint64
+	// Data source name
+	DSN string
+	// HTTPS only traffic allowed
 	HTTPSOnly bool
+	// Server Secret key
+	Secret string
 }
 
 // Constructor for new Server.
-func NewServer(port uint64, dsn string, secret string, opts ServerOpts) *Server {
-	_, err := pg.ParseURL(dsn)
+func NewServer(opts ServerOpts) *Server {
+	_, err := pg.ParseURL(opts.DSN)
 	if err != nil {
 		panic(err)
 	}
-	return &Server{Port: port, DSN: dsn, secret: secret, Opts: opts}
+	return &Server{opts: opts}
 }
 
 // Open and check database connection.
 func (s *Server) connectDB() error {
-	opt, err := pg.ParseURL(s.DSN)
+	o, err := pg.ParseURL(s.opts.DSN)
 	if err != nil {
 		return err
 	}
-	s.db = pg.Connect(opt)
+	s.db = pg.Connect(o)
 
 	// XXX: Ping postgres connection
 	//if err = s.db.Ping(); err != nil {
@@ -90,7 +91,7 @@ func (s *Server) createSchema() error {
 // Generates a hash with a static length suitable for CSRF middleware.
 func (s *Server) genHashFromSecret() []byte {
 	h := sha256.New()
-	h.Write([]byte(s.secret))
+	h.Write([]byte(s.opts.Secret))
 	return h.Sum(nil)
 }
 
@@ -141,10 +142,10 @@ func (s *Server) Init() {
 	csrfMiddleware := csrf.Protect(
 		s.genHashFromSecret(),
 		csrf.FieldName("csrf_token"),
-		csrf.Secure(s.Opts.HTTPSOnly),
+		csrf.Secure(s.opts.HTTPSOnly),
 	)
 	s.router.Use(csrfMiddleware)
-	if s.Opts.HTTPSOnly {
+	if s.opts.HTTPSOnly {
 		s.router.Use(RedirectToHTTPSMiddleware)
 	}
 
@@ -175,10 +176,10 @@ func (s *Server) Listen() error {
 	}
 
 	// Start the server
-	if s.Opts.HTTPSOnly {
+	if s.opts.HTTPSOnly {
 		log.Println("HTTPS only traffic allowed")
 	}
-	log.Printf("Starting server on :%d", s.Port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.router))
+	log.Printf("Starting server on :%d", s.opts.Port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.opts.Port), s.router))
 	return nil
 }

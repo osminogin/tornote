@@ -24,9 +24,18 @@ const (
 )
 
 func stubServer() *Server {
-	srv := NewServer(TestPort, TestDSN, TestSecret, ServerOpts{})
+	srv := NewServer(ServerOpts{})
 	srv.Init()
 	return srv
+}
+
+func testServerOpts() ServerOpts {
+	return ServerOpts{
+		Port:      8000,
+		DSN:       "postgres://postgres:postgres@postgres/postgres",
+		HTTPSOnly: false,
+		Secret:    "4tests0nly",
+	}
 }
 
 //func TestNewServer(t *testing.T) {
