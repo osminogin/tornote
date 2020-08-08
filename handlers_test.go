@@ -112,3 +112,24 @@ func TestCreateNoteHandler(t *testing.T) {
 		t.Errorf("return code %d instead %d", w.Code, http.StatusCreated)
 	}
 }
+
+// Checks cross site request forgery (CSRF) protection works.
+func TestCreateNoteForbidden(t *testing.T) {
+	srv := stubServer()
+	w := requestMainForm(srv)
+
+	data := url.Values{}
+	cookies := w.Result().Cookies()
+	data.Set("body", TestRandomString)
+	data.Set("csrf_token", "WRONG_TOKEN")
+
+	w = httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/note", bytes.NewBufferString(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+	req.AddCookie(cookies[0])
+	srv.router.ServeHTTP(w, req)
+
+	if w.Code != http.StatusForbidden {
+		t.Errorf("return code %d instead %d", w.Code, http.StatusForbidden)
+	}
+}
