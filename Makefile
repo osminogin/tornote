@@ -23,14 +23,6 @@ install: deps
 	@echo "--> Build and install binary"
 	@go install -ldflags $(GOLDFLAGS) ./...
 
-bindata: tools
-	@echo "--> Generate bindata"
-	@go-bindata -pkg tornote templates/... \
-		public/vendor/jquery/dist/jquery.slim.min.js \
-		public/vendor/sjcl/sjcl.js \
-		public/main.js \
-		public/styles.css
-
 format:
 	@echo "--> Running go fmt"
 	@go fmt ./...
