@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CSRF protection for main form.
 - Health check for Docker.
-- Heroku application manifest.
+- Heroku application manifest for simple deployment.
 
 ### Changed
 - Server options moved to separate struct.

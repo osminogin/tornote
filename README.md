@@ -20,7 +20,7 @@ If you have ideas to improve the our safety/security so far as possible please p
 
 ## Settings
 
-Configuration settings can be set with `.env` file or environment.
+Configuration settings can be set with .env file or environment.
 
 ``DATABASE_URL`` - Data source name (DSN) for PostgreSQL database.
 
@@ -34,7 +34,7 @@ Deploy to Heroku cloud:
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/osminogin/tornote)
 
-Or build and run locally:
+Build and run locally with Docker:
 
 ```bash
 git clone https://github.com/osminogin/tornote
@@ -45,8 +45,8 @@ docker run -p 8000:8000 -e DATABASE_URL=... -e SECRET_KEY=... tornote
 
 ## ChangeLog
 
-[CHANGELOG.md](https://raw.githubusercontent.com/osminogin/tornote/master/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/osminogin/tornote/blob/master/CHANGELOG.md)
 
 ## License
 
-See [COPYING](https://raw.githubusercontent.com/osminogin/tornote/master/COPYING)
+See [COPYING](https://github.com/osminogin/tornote/blob/master/COPYING)
