@@ -22,9 +22,19 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	UntilRead = iota
+	OneHour
+	OneDay
+	OneWeek
+	OneMonth
+)
+
 type Note struct {
 	UUID uuid.UUID `json:"-" pg:",pk,type:uuid"`
 	Data []byte    `json:"data"`
+	// XXX
+	Lifetime uint8
 }
 
 func (n *Note) String() string {
