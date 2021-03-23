@@ -60,13 +60,28 @@ $(document).ready(function() {
     });
 
     // Show decrypted secret note
-    if($("#secret_note").length > 0){
-        let secret = window.location.hash.substring(1);
-        let cipherText = $("#secret_note").text();
-        let decrypted = sjcl.decrypt(secret, cipherText);
-        $("#secret_note").html(decrypted);
-        $("#secret_note").removeClass("hidden");
-    }
+    $("button#fetch-and-decrypt-button").click(function(event) {
+        $("button#fetch-and-decrypt-button").addClass("disabled");
+        $.ajax({
+            url: '/read' + window.location.pathname + window.location.hash,
+            method: "GET",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(res) {
+                let secret = window.location.hash.substring(1);
+                let cipherText = res;
+                let decrypted = sjcl.decrypt(secret, cipherText);
+                $("#secret_note").text(decrypted);
+                $("#secret_note").removeClass("hidden");
+                $("button#fetch-and-decrypt-button").addClass("hidden");
+            },
+            error: function (err) {
+                window.alert(err.responseText);
+                $("button#fetch-and-decrypt-button").removeClass("disabled");
+            }
+        });
+    });
 });
 
 // Soluiton from https://stackoverflow.com/questions/985272/
