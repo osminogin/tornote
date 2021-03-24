@@ -67,13 +67,39 @@ func ReadNoteHandler(s *Server) http.Handler {
 			http.NotFound(w, r)
 			return
 		}
+
+		// Render "ready" template to user
+		s.renderTemplate(w, "note.html", nil)
+	})
+}
+
+// ReadRawNoteHandler print encrypted data for client-side decrypt and destroy note.
+func ReadRawNoteHandler(s *Server) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		raw, _ := base64.RawURLEncoding.DecodeString(vars["id"])
+		id, err := uuid.FromBytes(raw)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+
+		n := &Note{UUID: id}
+
+		// Get encrypted n or return 404
+		err = s.db.Select(n)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
 		// Deferred n deletion
 		defer func() {
 			s.db.Delete(n)
 		}()
 
 		// Print encrypted n to user
-		s.renderTemplate(w, "note.html", string(n.Data))
+		//s.renderTemplate(w, "note.html", string(n.Data))
+		w.Write(n.Data)
 	})
 }
 

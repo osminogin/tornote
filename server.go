@@ -154,6 +154,7 @@ func (s *Server) Init() {
 	s.router.HandleFunc("/healthz", HealthStatusHandler).Methods("GET")
 	s.router.PathPrefix("/public/").HandlerFunc(PublicFileHandler).Methods("GET")
 	s.router.Handle("/note", CreateNoteHandler(s)).Methods("POST")
+	s.router.Handle("/read/{id}", ReadRawNoteHandler(s)).Methods("GET")
 	s.router.Handle("/{id}", ReadNoteHandler(s)).Methods("GET")
 
 	// Pre-compile templates
